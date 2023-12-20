@@ -1,21 +1,21 @@
 .model small
 .stack 256
-.code
 
+.code
 main proc
-         mov ah,1       ;input
+         mov ah,1        ;input a
          int 21h
          mov bl,al
     
-         mov ah,2       ;New Line
-         mov dl,10
+         mov ah,1        ;input b
          int 21h
+         mov bh,al
+         
+         add bl,bh
     
-         mov dl,13      ;cret
-         int 21h
-    
-         mov ah,2       ;output
+         mov ah,2        ;output a+48
          mov dl,bl
+         sub dl,48
          int 21h
     
     exit:
@@ -24,4 +24,3 @@ main proc
 main endp
     
 end main
-    
