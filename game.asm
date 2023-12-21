@@ -1,9 +1,7 @@
-;https://pastebin.com/MZNwT41t
-
 org 100h
- 
+
 jmp printplayer
- 
+
 printplayer:
 call delay
 jmp checkcollisions
@@ -29,8 +27,8 @@ jmp printenemies
 printplayer3:
 call hidecursor
 jmp update_enemies
- 
- 
+
+
 update_enemies:
 mov al, enemy1y
 dec al
@@ -44,9 +42,9 @@ mov BYTE PTR[enemy3y], al
 mov al, enemy4y
 dec al
 mov BYTE PTR[enemy4y], al
- 
+
 jmp input
- 
+
 printenemies:
 mov dl, enemy1y
 mov dh, enemy1x
@@ -93,37 +91,37 @@ cmp ah, 50h
 je uparrow
 cmp ah, 48h
 je downarrow
- 
+
 jmp printplayer
- 
+
 leftarrow:  
 mov al, playery
 inc al
 mov [playery], al
 call clearkeyboardbuffer
 jmp printplayer
- 
+
 rightarrow:
 mov al, playery
 dec al                             
 mov BYTE PTR[playery], al
 call clearkeyboardbuffer
 jmp printplayer
- 
+
 downarrow: 
 mov al, playerx
 dec al
 mov BYTE PTR[playerx], al
 call clearkeyboardbuffer
 jmp printplayer
- 
+
 uparrow: 
 mov al, playerx
 inc al
 mov [playerx], al
 call clearkeyboardbuffer
 jmp printplayer
- 
+
 checkcollisions:
 jmp checkenemy1xcollision
 checkcollisions2:
@@ -157,7 +155,7 @@ cmp ah, 03h
 jl updateenemy4
 checkcollisions6:   
 jmp printplayer2
- 
+
 updateenemy1:
 mov BYTE PTR[enemy1y], 50
 add BYTE PTR[score], 5
@@ -174,63 +172,63 @@ updateenemy4:
 mov BYTE PTR[enemy4y], 50
 add BYTE PTR[score], 5
 jmp checkcollisions6
- 
+
 checkenemy1xcollision: 
 mov al, playerx
 mov ah, enemy1x
 cmp ah, al
 je checkenemy1ycollision
 jmp checkcollisions2
- 
+
 checkenemy1ycollision:  ;end
 mov al, playery
 mov ah, enemy1y
 cmp ah, al
 je exit
 jmp checkcollisions2
- 
+
 checkenemy2xcollision:
 mov al, playerx
 mov ah, enemy2x
 cmp ah, al
 je checkenemy2ycollision
 jmp checkcollisions3
- 
+
 checkenemy2ycollision:
 mov al, playery
 mov ah, enemy2y
 cmp ah, al
 je exit
 jmp checkcollisions3
- 
+
 checkenemy3xcollision:
 mov al, playerx
 mov ah, enemy3x
 cmp ah, al
 je checkenemy3ycollision
 jmp checkcollisions4
- 
+
 checkenemy3ycollision:
 mov al, playery
 mov ah, enemy3y
 cmp ah, al
 je exit
 jmp checkcollisions4
- 
+
 checkenemy4xcollision:
 mov al, playerx
 mov ah, enemy4x
 cmp ah, al
 je checkenemy4ycollision
 jmp checkcollisions5
- 
+
 checkenemy4ycollision:
 mov al, playery
 mov ah, enemy4y
 cmp ah, al
 je exit
 jmp checkcollisions5
- 
+
 exit:
 call clear_screen
 call resetcursor
@@ -244,7 +242,7 @@ call clear_screen
 mov ah, 4ch
 mov al, 0
 int 21h 
- 
+
 printax proc
     mov cx, 0
     mov bx, 10
@@ -265,14 +263,14 @@ jnz @@loophere
     loop @@loophere2
     ret
 printax endp
- 
+
 printmap proc
 mov dx, offset map
 mov ah, 9
 int 21h
 ret
 printmap endp
- 
+
 clear_screen proc near
 mov ah,0
 mov al,3
@@ -291,7 +289,7 @@ mov dl, 51h
 int 10h
 ret    
 hidecursor endp  
- 
+
 resetcursor proc near
 mov dl, 0    
 mov dh, 0    
@@ -300,14 +298,14 @@ mov ah, 02h
 int 10h
 ret    
 resetcursor endp                                   
- 
+
 clearkeyboardbuffer		proc	near
 mov ah,0ch
 mov al,0
 int 21h
 ret
 clearkeyboardbuffer		endp
- 
+
 delay proc near
 mov     cx, 01h
 mov     dx, 4240h
@@ -315,7 +313,7 @@ mov     ah, 86h
 int     15h
 ret    
 delay endp
- 
+
 player:  db 1, 0ah, 0dh, 24h
 playerx db 12
 playery db 20
@@ -331,16 +329,16 @@ enemy3y db 50
 enemy4 db '&', 0ah, 0dh, 24h
 enemy4x db 5
 enemy4y db 50
- 
- 
+
+
 activepagenumber db ?
- 
- 
+
+
 gameovermsg: db 'GAME OVER', 0ah, 0dh
 db 'Press any key to continue...', 0ah, 0dh, 24h
- 
+
 score dw 0
- 
+
 map dw ' ', 0ah, 0dh
 dw '####################################################', 0ah, 0dh
 dw '#                                                  #', 0ah, 0dh
