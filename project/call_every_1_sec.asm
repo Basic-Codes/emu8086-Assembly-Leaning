@@ -24,7 +24,7 @@ main proc
           mov ah,2
           mov dl,7
           int 21h
-
+     ; print ■ | 254 in Ascii table
           mov ah,2
           mov dl,254
           int 21h
