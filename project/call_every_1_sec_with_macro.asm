@@ -17,6 +17,14 @@ callEvery1Sec MACRO params
                   int 21h
 ENDM
 
+waitFor1Sec MACRO params
+          ; Delay 1 sec | 16960 | 4240H
+                    MOV CX, 0FH
+                    MOV DX, 4240H
+                    MOV AH, 86H
+                    INT 15H
+ENDM
+
 main proc
               mov ax, @data
               mov ds, ax
@@ -26,13 +34,9 @@ main proc
               int 21h
 
      Loop:    
-     ; Delay 1 sec | 16960 | 4240H
-              MOV CX, 0FH
-              MOV DX, 4240H
-              MOV AH, 86H
-              INT 15H
+               waitFor1Sec
 
-              callEvery1Sec
+               callEvery1Sec
           
               jmp Loop
     
