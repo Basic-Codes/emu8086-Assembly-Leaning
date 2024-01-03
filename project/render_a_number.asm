@@ -69,6 +69,10 @@ print MACRO params
                   lea dx,params
                   int 21h
 ENDM
+clearDisplay MACRO
+     mov ax, 3
+     int 10h
+ENDM
 newLine MACRO
          mov ah,2       ;New Line
          mov dl,10
@@ -163,30 +167,39 @@ main proc
      render0
      newLine
      waitFor1Sec
+     clearDisplay
      render1
      newLine
      waitFor1Sec
+     clearDisplay
      render2
      newLine
      waitFor1Sec
+     clearDisplay
      render3
      newLine
      waitFor1Sec
+     clearDisplay
      render4
      newLine
      waitFor1Sec
+     clearDisplay
      render5
      newLine
      waitFor1Sec
+     clearDisplay
      render6
      newLine
      waitFor1Sec
+     clearDisplay
      render7
      newLine
      waitFor1Sec
+     clearDisplay
      render8
      newLine
      waitFor1Sec
+     clearDisplay
      render9
 
           
