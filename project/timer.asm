@@ -129,33 +129,64 @@ setMinPlaces MACRO
      mov min_10_place, al
 ENDM
 
+
 displayDigit MACRO digit
      mov ah,2
      mov dl,digit
      add dl,48
      int 21h
 
+     ; cmp dl,'0'
+     ; je .jump_render0
+     ; cmp dl,'1'
+     ; je .jump_render1
+     ; cmp dl,'2'
+     ; je .jump_render2
+     ; cmp dl,'3'
+     ; je .jump_render3
+     ; cmp dl,'4'
+     ; je .jump_render4
+     ; cmp dl,'5'
+     ; je .jump_render5
+     ; cmp dl,'6'
+     ; je .jump_render6
+     ; cmp dl,'7'
+     ; je .jump_render7
+     ; cmp dl,'8'
+     ; je .jump_render8
+     ; cmp dl,'9'
+     ; je .jump_render9
 
-     cmp dl,'0'
-     je jump_render0
-     cmp dl,'1'
-     je jump_render1
-     cmp dl,'2'
-     je jump_render2
-     cmp dl,'3'
-     je jump_render3
-     cmp dl,'4'
-     je jump_render4
-     cmp dl,'5'
-     je jump_render5
-     cmp dl,'6'
-     je jump_render6
-     cmp dl,'7'
-     je jump_render7
-     cmp dl,'8'
-     je jump_render8
-     cmp dl,'9'
-     je jump_render9
+     ; .jump_render0:  
+     ;      render0
+     ;      jmp exit:
+     ; .jump_render1:  
+     ;      render1
+     ;      jmp exit:
+     ; .jump_render2:  
+     ;      render2
+     ;      jmp exit:
+     ; .jump_render3:  
+     ;      render3
+     ;      jmp exit:
+     ; .jump_render4:  
+     ;      render4
+     ;      jmp exit:
+     ; .jump_render5:  
+     ;      render5
+     ;      jmp exit:
+     ; .jump_render6:  
+     ;      render6
+     ;      jmp exit:
+     ; .jump_render7:  
+     ;      render7
+     ;      jmp exit:
+     ; .jump_render8:  
+     ;      render8
+     ;      jmp exit:
+     ; .jump_render9:  
+     ;      render9
+     ;      jmp exit:
 ENDM
 
 displayColon MACRO
@@ -173,6 +204,76 @@ displayClicheTimer MACRO
      displayDigit sec_1_place
 ENDM
 
+displayTimer PROC
+
+     clearDisplay
+
+;min_10_place
+     mov dl,sec_1_place
+
+     cmp dl,0
+     je .jump_render_sec_1_place_0_1
+     cmp dl,1
+     je .jump_render_sec_1_place_1_1
+     cmp dl,2
+     je .jump_render_sec_1_place_2_1
+     cmp dl,3
+     je .jump_render_sec_1_place_3_1
+     cmp dl,4
+     je .jump_render_sec_1_place_4_1
+     cmp dl,5
+     je .jump_render_sec_1_place_5_1
+     cmp dl,6
+     je .jump_render_sec_1_place_6_1
+     cmp dl,7
+     je .jump_render_sec_1_place_7_1
+     cmp dl,8
+     je .jump_render_sec_1_place_8_1
+     cmp dl,9
+     je .jump_render_sec_1_place_9_1
+
+     .jump_render_sec_1_place_0_1:  
+          print _0_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_1_1:  
+          print _1_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_2_1:  
+          print _2_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_3_1:  
+          print _3_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_4_1:  
+          print _4_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_5_1:  
+          print _5_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_6_1:  
+          print _6_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_7_1:  
+          print _7_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_8_1:  
+          print _8_1
+          call loopStartTimer
+          jmp exit:
+     .jump_render_sec_1_place_9_1:  
+          print _9_1
+          call loopStartTimer
+          jmp exit:
+     
+displayTimer ENDP
 
 
 render0 MACRO
@@ -246,56 +347,90 @@ render9 MACRO
           print _9_5
 ENDM
 
+; ___TEST PROC
+;      cmp dl,'0'
+;      je jump_render0
+;      cmp dl,'1'
+;      je jump_render1
+;      cmp dl,'2'
+;      je jump_render2
+;      cmp dl,'3'
+;      je jump_render3
+;      cmp dl,'4'
+;      je jump_render4
+;      cmp dl,'5'
+;      je jump_render5
+;      cmp dl,'6'
+;      je jump_render6
+;      cmp dl,'7'
+;      je jump_render7
+;      cmp dl,'8'
+;      je jump_render8
+;      cmp dl,'9'
+;      je jump_render9
 
-startTimer MACRO
+;      jump_render0:  
+;           render0
+;           jmp exit:
+;      jump_render1:  
+;           render1
+;           jmp exit:
+;      jump_render2:  
+;           render2
+;           jmp exit:
+;      jump_render3:  
+;           render3
+;           jmp exit:
+;      jump_render4:  
+;           render4
+;           jmp exit:
+;      jump_render5:  
+;           render5
+;           jmp exit:
+;      jump_render6:  
+;           render6
+;           jmp exit:
+;      jump_render7:  
+;           render7
+;           jmp exit:
+;      jump_render8:  
+;           render8
+;           jmp exit:
+;      jump_render9:  
+;           render9
+;           jmp exit:
+
+; ___TEST ENDP
+
+
+loopStartTimer PROC
+     waitFor1Sec
+     sub total_sec, 1
+     separate
+     setSecPlaces
+     setMinPlaces
+     call displayTimer
+loopStartTimer ENDP
+
+startTimer PROC
      mov cx,total_sec
      loopx:
+          waitFor1Sec
           sub total_sec, 1
           mov cx,total_sec
           separate
           setSecPlaces
           setMinPlaces
-          displayClicheTimer
-          waitFor1Sec
+          ; displayClicheTimer
+          call displayTimer
           loop loopx
-ENDM
+startTimer ENDP
 
 main proc
                mov ax, @data
                mov ds, ax
 
-               startTimer
-
-     jump_render0:  
-          render0
-          jmp exit:
-     jump_render1:  
-          render1
-          jmp exit:
-     jump_render2:  
-          render2
-          jmp exit:
-     jump_render3:  
-          render3
-          jmp exit:
-     jump_render4:  
-          render4
-          jmp exit:
-     jump_render5:  
-          render5
-          jmp exit:
-     jump_render6:  
-          render6
-          jmp exit:
-     jump_render7:  
-          render7
-          jmp exit:
-     jump_render8:  
-          render8
-          jmp exit:
-     jump_render9:  
-          render9
-          jmp exit:
+               call startTimer
 
      exit:    
               mov      ah, 4ch
