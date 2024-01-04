@@ -1,0 +1,1965 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+digital_clock.exe -- emu8086 assembler version: 4.08  
+ 
+[ 1/4/2024  --  8:34:27 PM ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       .model small
+[   2]        :                                       .stack 256
+[   3]        :                                       
+[   4]        :                                       .data
+[   5]    0100: 27 01                                 total_sec      dw 295
+[   6]    0102: 00                                    sec           db ?
+[   7]    0103: 00                                    min           db ?
+[   8]    0104: 3C                                    sec_multiplier db 60
+[   9]        :                                       
+[  10]    0105: 00                                    sec_1_place db ?
+[  11]    0106: 00                                    sec_10_place db ?
+[  12]    0107: 00                                    min_1_place db ?
+[  13]    0108: 00                                    min_10_place db ?
+[  14]        :                                       
+[  15]    0109: 00                                    service                  db ?
+[  16]        :                                       
+[  17]    010A: 0A 0D 20 20 20 20 20 20 20 20 20 20   welcomePrompt01          db 10,13,'                      +----------------------------+$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                2B 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2B 24                
+[  18]    0141: 0A 0D 20 20 20 20 20 20 20 20 20 20   welcomePrompt02          db 10,13,'                      |           Welcome          |$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                7C 20 20 20 20 20 20 20 20 20 20 20 
+                57 65 6C 63 6F 6D 65 20 20 20 20 20 
+                20 20 20 20 20 7C 24                
+[  19]    0178: 0A 0D 20 20 20 20 20 20 20 20 20 20   welcomePrompt03          db 10,13,'                      +----------------------------+$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                2B 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2B 24                
+[  20]    01AF: 0A 0D 2B 2D 2D 2D 2D 2D 2D 2D 2D 2D   selectServicePromptStart db 10,13,'+-----------------------------------------------------------------------+$'
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2B 24                         
+[  21]    01FB: 0A 0D 7C 20 20 20 20 20 20 20 20 20   selectServicePrompt01    db 10,13,'|                            Select a service                           |$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 53 65 6C 65 63 
+                74 20 61 20 73 65 72 76 69 63 65 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 7C 24                         
+[  22]    0247: 0A 0D 7C 20 20 20 20 20 20 20 20 20   selectServicePrompt02    db 10,13,'|                                                                       |$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 7C 24                         
+[  23]    0293: 0A 0D 7C 20 20 20 20 20 20 20 20 20   selectServicePrompt03    db 10,13,'|                            1. Timer                                   |$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 31 2E 20 54 69 
+                6D 65 72 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 7C 24                         
+[  24]    02DF: 0A 0D 7C 20 20 20 20 20 20 20 20 20   selectServicePrompt04    db 10,13,'|                            2. Stopwatch                               |$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 32 2E 20 53 74 
+                6F 70 77 61 74 63 68 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 7C 24                         
+[  25]    032B: 0A 0D 7C 20 20 20 20 20 20 20 20 20   selectServicePrompt05    db 10,13,'|                            3. Clock                                   |$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 33 2E 20 43 6C 
+                6F 63 6B 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 7C 24                         
+[  26]    0377: 0A 0D 2B 2D 2D 2D 2D 2D 2D 2D 2D 2D   selectServicePromptEnd   db 10,13,'+-----------------------------------------------------------------------+$'
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2B 24                         
+[  27]    03C3: 0A 0D 53 65 72 76 69 63 65 3A 20 24   selectServicePromptFinal db 10,13,'Service: $'
+                                                    
+[  28]        :                                       
+[  29]    03CF: 0A 0D 20 20 20 20 20 20 20 20 20 20   timerPromptStart             db 10,13,'                      +----------------------------+$',
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                2B 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2B 24                
+[  30]    0406: 0A 0D 20 20 20 20 20 20 20 20 20 20   timerPromptTimer             db 10,13,'                      |             Timer          |$',
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                7C 20 20 20 20 20 20 20 20 20 20 20 
+                20 20 54 69 6D 65 72 20 20 20 20 20 
+                20 20 20 20 20 7C 24                
+[  31]    043D: 0A 0D 20 20 20 20 20 20 20 20 20 20   timerPromptEnd               db 10,13,'                      +----------------------------+$'
+                20 20 20 20 20 20 20 20 20 20 20 20 
+                2B 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 2D 
+                2D 2D 2D 2D 2D 2B 24                
+[  32]    0474: 0A 0D 53 65 74 20 74 69 6D 65 72 20   timerPromptSet               db 10,13,'Set timer for (Min): $'
+                66 6F 72 20 28 4D 69 6E 29 3A 20 24 
+                                                    
+[  33]        :                                       
+[  34]        :                                       
+[  35]    048C: 0A 0D 53 74 6F 70 77 61 74 63 68 3A   stopwatchPrompt         db 10,13,'Stopwatch: $'
+                20 24                               
+[  36]    049A: 0A 0D 43 6C 6F 63 6B 3A 20 24         clockPrompt             db 10,13,'Clock: $'
+[  37]        :                                       
+[  38]        :                                       ; Numbers String
+[  39]    04A4: 20 20 23 23 23 20 20 24               _0_1 db '  ###  $'
+[  40]    04AC: 20 23 20 20 20 23 20 24               _0_2 db ' #   # $'
+[  41]    04B4: 20 23 20 20 20 23 20 24               _0_3 db ' #   # $'
+[  42]    04BC: 20 23 20 20 20 23 20 24               _0_4 db ' #   # $'
+[  43]    04C4: 20 20 23 23 23 20 20 24               _0_5 db '  ###  $'
+[  44]        :                                       
+[  45]    04CC: 20 20 20 20 20 23 20 24               _1_1 db '     # $'
+[  46]    04D4: 20 20 20 20 20 23 20 24               _1_2 db '     # $'
+[  47]    04DC: 20 20 20 20 20 23 20 24               _1_3 db '     # $'
+[  48]    04E4: 20 20 20 20 20 23 20 24               _1_4 db '     # $'
+[  49]    04EC: 20 20 20 20 20 23 20 24               _1_5 db '     # $'
+[  50]        :                                       
+[  51]    04F4: 20 23 23 23 23 23 20 24               _2_1 db ' ##### $'
+[  52]    04FC: 20 20 20 20 20 23 20 24               _2_2 db '     # $'
+[  53]    0504: 20 23 23 23 23 23 20 24               _2_3 db ' ##### $'
+[  54]    050C: 20 23 20 20 20 20 20 24               _2_4 db ' #     $'
+[  55]    0514: 20 23 23 23 23 23 20 24               _2_5 db ' ##### $'
+[  56]        :                                       
+[  57]    051C: 20 23 23 23 23 20 20 24               _3_1 db ' ####  $'
+[  58]    0524: 20 20 20 20 20 23 20 24               _3_2 db '     # $'
+[  59]    052C: 20 20 23 23 23 20 20 24               _3_3 db '  ###  $'
+[  60]    0534: 20 20 20 20 20 23 20 24               _3_4 db '     # $'
+[  61]    053C: 20 23 23 23 23 20 20 24               _3_5 db ' ####  $'
+[  62]        :                                       
+[  63]    0544: 20 23 20 20 20 23 20 24               _4_1 db ' #   # $'
+[  64]    054C: 20 23 20 20 20 23 20 24               _4_2 db ' #   # $'
+[  65]    0554: 20 23 23 23 23 23 20 24               _4_3 db ' ##### $'
+[  66]    055C: 20 20 20 20 20 23 20 24               _4_4 db '     # $'
+[  67]    0564: 20 20 20 20 20 23 20 24               _4_5 db '     # $'
+[  68]        :                                       
+[  69]    056C: 20 23 23 23 23 23 20 24               _5_1 db ' ##### $'
+[  70]    0574: 20 23 20 20 20 20 20 24               _5_2 db ' #     $'
+[  71]    057C: 20 23 23 23 23 23 20 24               _5_3 db ' ##### $'
+[  72]    0584: 20 20 20 20 20 23 20 24               _5_4 db '     # $'
+[  73]    058C: 20 23 23 23 23 23 20 24               _5_5 db ' ##### $'
+[  74]        :                                       
+[  75]    0594: 20 23 23 23 23 23 20 24               _6_1 db ' ##### $'
+[  76]    059C: 20 23 20 20 20 20 20 24               _6_2 db ' #     $'
+[  77]    05A4: 20 23 23 23 23 23 20 24               _6_3 db ' ##### $'
+[  78]    05AC: 20 23 20 20 20 23 20 24               _6_4 db ' #   # $'
+[  79]    05B4: 20 23 23 23 23 23 20 24               _6_5 db ' ##### $'
+[  80]        :                                       
+[  81]    05BC: 20 23 23 23 23 23 20 24               _7_1 db ' ##### $'
+[  82]    05C4: 20 20 20 20 20 23 20 24               _7_2 db '     # $'
+[  83]    05CC: 20 20 20 20 20 23 20 24               _7_3 db '     # $'
+[  84]    05D4: 20 20 20 20 20 23 20 24               _7_4 db '     # $'
+[  85]    05DC: 20 20 20 20 20 23 20 24               _7_5 db '     # $'
+[  86]        :                                       
+[  87]    05E4: 20 20 23 23 23 20 20 24               _8_1 db '  ###  $'
+[  88]    05EC: 20 23 20 20 20 23 20 24               _8_2 db ' #   # $'
+[  89]    05F4: 20 20 23 23 23 20 20 24               _8_3 db '  ###  $'
+[  90]    05FC: 20 23 20 20 20 23 20 24               _8_4 db ' #   # $'
+[  91]    0604: 20 20 23 23 23 20 20 24               _8_5 db '  ###  $'
+[  92]        :                                       
+[  93]    060C: 20 23 23 23 23 23 20 24               _9_1 db ' ##### $'
+[  94]    0614: 20 23 20 20 20 23 20 24               _9_2 db ' #   # $'
+[  95]    061C: 20 23 23 23 23 23 20 24               _9_3 db ' ##### $'
+[  96]    0624: 20 20 20 20 20 23 20 24               _9_4 db '     # $'
+[  97]    062C: 20 23 23 23 23 23 20 24               _9_5 db ' ##### $'
+[  98]        :                                       
+[  99]    0634: 20 20 20 24                           _x_1 db '   $'
+[ 100]    0638: 20 23 20 24                           _x_2 db ' # $'
+[ 101]    063C: 20 20 20 24                           _x_3 db '   $'
+[ 102]    0640: 20 23 20 24                           _x_4 db ' # $'
+[ 103]    0644: 20 20 20 24                           _x_5 db '   $'
+[ 104]        :                                       .code
+[ 105]        :                                       
+[ 106]        :                                       print MACRO params
+[ 107]        :                                       mov ah,9
+[ 108]        :                                       lea dx,params
+[ 109]        :                                       int 21h
+[ 110]        :                                       ENDM
+[ 111]        :                                       
+[ 112]        :                                       beep MACRO
+[ 113]        :                                       mov ah,2
+[ 114]        :                                       mov dl,7
+[ 115]        :                                       int 21h
+[ 116]        :                                       ENDM
+[ 117]        :                                       
+[ 118]        :                                       clearDisplay MACRO
+[ 119]        :                                       mov ax, 3
+[ 120]        :                                       int 10h
+[ 121]        :                                       ENDM
+[ 122]        :                                       
+[ 123]        :                                       newLine MACRO
+[ 124]        :                                       mov ah,2       ;New Line
+[ 125]        :                                       mov dl,10
+[ 126]        :                                       int 21h
+[ 127]        :                                       mov dl,13      ;cret
+[ 128]        :                                       int 21h
+[ 129]        :                                       ENDM
+[ 130]        :                                       
+[ 131]        :                                       waitFor1Sec MACRO params
+[ 132]        :                                       MOV CX, 0FH
+[ 133]        :                                       ; MOV DX, 4240H ; Delay 1 sec | 16960 | 4240H
+[ 134]        :                                       MOV DX, 1090H ; Delay 1 sec | 4340 | 1090H
+[ 135]        :                                       MOV AH, 86H
+[ 136]        :                                       INT 15H
+[ 137]        :                                       ENDM
+[ 138]        :                                       
+[ 139]        :                                       separate MACRO
+[ 140]        :                                       xor ax,ax
+[ 141]        :                                       mov ax, total_sec
+[ 142]        :                                       mov bl, sec_multiplier
+[ 143]        :                                       div bl
+[ 144]        :                                       
+[ 145]        :                                       mov min, al
+[ 146]        :                                       mov sec, ah
+[ 147]        :                                       ENDM
+[ 148]        :                                       
+[ 149]        :                                       setSecPlaces MACRO
+[ 150]        :                                       xor ax,ax
+[ 151]        :                                       mov al, sec
+[ 152]        :                                       mov bl,10
+[ 153]        :                                       div bl
+[ 154]        :                                       mov sec_1_place, ah
+[ 155]        :                                       mov sec_10_place, al
+[ 156]        :                                       ENDM
+[ 157]        :                                       
+[ 158]        :                                       setMinPlaces MACRO
+[ 159]        :                                       xor ax,ax
+[ 160]        :                                       mov al, min
+[ 161]        :                                       mov bl,10
+[ 162]        :                                       div bl
+[ 163]        :                                       mov min_1_place, ah
+[ 164]        :                                       mov min_10_place, al
+[ 165]        :                                       ENDM
+[ 166]        :                                       
+[ 167]        :                                       
+[ 168]        :                                       displayDigit MACRO digit
+[ 169]        :                                       mov ah,2
+[ 170]        :                                       mov dl,digit
+[ 171]        :                                       add dl,48
+[ 172]        :                                       int 21h
+[ 173]        :                                       
+[ 174]        :                                       ; cmp dl,'0'
+[ 175]        :                                       ; je .jump_render0
+[ 176]        :                                       ; cmp dl,'1'
+[ 177]        :                                       ; je .jump_render1
+[ 178]        :                                       ; cmp dl,'2'
+[ 179]        :                                       ; je .jump_render2
+[ 180]        :                                       ; cmp dl,'3'
+[ 181]        :                                       ; je .jump_render3
+[ 182]        :                                       ; cmp dl,'4'
+[ 183]        :                                       ; je .jump_render4
+[ 184]        :                                       ; cmp dl,'5'
+[ 185]        :                                       ; je .jump_render5
+[ 186]        :                                       ; cmp dl,'6'
+[ 187]        :                                       ; je .jump_render6
+[ 188]        :                                       ; cmp dl,'7'
+[ 189]        :                                       ; je .jump_render7
+[ 190]        :                                       ; cmp dl,'8'
+[ 191]        :                                       ; je .jump_render8
+[ 192]        :                                       ; cmp dl,'9'
+[ 193]        :                                       ; je .jump_render9
+[ 194]        :                                       
+[ 195]        :                                       ; .jump_render0:
+[ 196]        :                                       ;      render0
+[ 197]        :                                       ;      jmp exit:
+[ 198]        :                                       ; .jump_render1:
+[ 199]        :                                       ;      render1
+[ 200]        :                                       ;      jmp exit:
+[ 201]        :                                       ; .jump_render2:
+[ 202]        :                                       ;      render2
+[ 203]        :                                       ;      jmp exit:
+[ 204]        :                                       ; .jump_render3:
+[ 205]        :                                       ;      render3
+[ 206]        :                                       ;      jmp exit:
+[ 207]        :                                       ; .jump_render4:
+[ 208]        :                                       ;      render4
+[ 209]        :                                       ;      jmp exit:
+[ 210]        :                                       ; .jump_render5:
+[ 211]        :                                       ;      render5
+[ 212]        :                                       ;      jmp exit:
+[ 213]        :                                       ; .jump_render6:
+[ 214]        :                                       ;      render6
+[ 215]        :                                       ;      jmp exit:
+[ 216]        :                                       ; .jump_render7:
+[ 217]        :                                       ;      render7
+[ 218]        :                                       ;      jmp exit:
+[ 219]        :                                       ; .jump_render8:
+[ 220]        :                                       ;      render8
+[ 221]        :                                       ;      jmp exit:
+[ 222]        :                                       ; .jump_render9:
+[ 223]        :                                       ;      render9
+[ 224]        :                                       ;      jmp exit:
+[ 225]        :                                       ENDM
+[ 226]        :                                       
+[ 227]        :                                       displayColon MACRO
+[ 228]        :                                       mov ah,2
+[ 229]        :                                       mov dl,58
+[ 230]        :                                       int 21h
+[ 231]        :                                       ENDM
+[ 232]        :                                       
+[ 233]        :                                       displayClicheTimer MACRO
+[ 234]        :                                       clearDisplay
+[ 235]        :                                       displayDigit min_10_place
+[ 236]        :                                       displayDigit min_1_place
+[ 237]        :                                       displayColon
+[ 238]        :                                       displayDigit sec_10_place
+[ 239]        :                                       displayDigit sec_1_place
+[ 240]        :                                       ENDM
+[ 241]        :                                       
+[ 242]    0650:                                       displayTimer PROC
+[ 243]        :                                       
+[ 244]    0650: B8 03 00 CD 10                        clearDisplay
+[ 245]        :                                       
+[ 246]    0655: E8 00 00                              call displayLevel_01
+[ 247]        :                                       
+[ 248]        :                                       displayTimer ENDP
+[ 249]        :                                       
+[ 250]        :                                       ; ======================
+[ 251]        :                                       ;      Level_01
+[ 252]        :                                       ; ======================
+[ 253]    0658:                                       displayLevel_01 PROC
+[ 254]        :                                       
+[ 255]    0658:                                       show_min_10_place_1:
+[ 256]    0658: 8A 16 08 00                           mov dl,min_10_place
+[ 257]        :                                       
+[ 258]    065C: 80 FA 00                              cmp dl,0
+[ 259]    065F: 74 2D                                 je .jump_render_min_10_place_0_1
+[ 260]    0661: 80 FA 01                              cmp dl,1
+[ 261]    0664: 74 34                                 je .jump_render_min_10_place_1_1
+[ 262]    0666: 80 FA 02                              cmp dl,2
+[ 263]    0669: 74 3B                                 je .jump_render_min_10_place_2_1
+[ 264]    066B: 80 FA 03                              cmp dl,3
+[ 265]    066E: 74 42                                 je .jump_render_min_10_place_3_1
+[ 266]    0670: 80 FA 04                              cmp dl,4
+[ 267]    0673: 74 49                                 je .jump_render_min_10_place_4_1
+[ 268]    0675: 80 FA 05                              cmp dl,5
+[ 269]    0678: 74 50                                 je .jump_render_min_10_place_5_1
+[ 270]    067A: 80 FA 06                              cmp dl,6
+[ 271]    067D: 74 57                                 je .jump_render_min_10_place_6_1
+[ 272]    067F: 80 FA 07                              cmp dl,7
+[ 273]    0682: 74 5E                                 je .jump_render_min_10_place_7_1
+[ 274]    0684: 80 FA 08                              cmp dl,8
+[ 275]    0687: 74 65                                 je .jump_render_min_10_place_8_1
+[ 276]    0689: 80 FA 09                              cmp dl,9
+[ 277]    068C: 74 6C                                 je .jump_render_min_10_place_9_1
+[ 278]        :                                       
+[ 279]    068E:                                       .jump_render_min_10_place_0_1:
+[ 280]    068E: B4 09 BA A4 03 CD 21                  print _0_1
+[ 281]    0695: EB 6F                                 jmp show_min_1_place_1
+[ 282]    0697: E9 04 10                              jmp exit:
+[ 283]    069A:                                       .jump_render_min_10_place_1_1:
+[ 284]    069A: B4 09 BA CC 03 CD 21                  print _1_1
+[ 285]    06A1: EB 63                                 jmp show_min_1_place_1
+[ 286]    06A3: E9 F8 0F                              jmp exit:
+[ 287]    06A6:                                       .jump_render_min_10_place_2_1:
+[ 288]    06A6: B4 09 BA F4 03 CD 21                  print _2_1
+[ 289]    06AD: EB 57                                 jmp show_min_1_place_1
+[ 290]    06AF: E9 EC 0F                              jmp exit:
+[ 291]    06B2:                                       .jump_render_min_10_place_3_1:
+[ 292]    06B2: B4 09 BA 1C 04 CD 21                  print _3_1
+[ 293]    06B9: EB 4B                                 jmp show_min_1_place_1
+[ 294]    06BB: E9 E0 0F                              jmp exit:
+[ 295]    06BE:                                       .jump_render_min_10_place_4_1:
+[ 296]    06BE: B4 09 BA 44 04 CD 21                  print _4_1
+[ 297]    06C5: EB 3F                                 jmp show_min_1_place_1
+[ 298]    06C7: E9 D4 0F                              jmp exit:
+[ 299]    06CA:                                       .jump_render_min_10_place_5_1:
+[ 300]    06CA: B4 09 BA 6C 04 CD 21                  print _5_1
+[ 301]    06D1: EB 33                                 jmp show_min_1_place_1
+[ 302]    06D3: E9 C8 0F                              jmp exit:
+[ 303]    06D6:                                       .jump_render_min_10_place_6_1:
+[ 304]    06D6: B4 09 BA 94 04 CD 21                  print _6_1
+[ 305]    06DD: EB 27                                 jmp show_min_1_place_1
+[ 306]    06DF: E9 BC 0F                              jmp exit:
+[ 307]    06E2:                                       .jump_render_min_10_place_7_1:
+[ 308]    06E2: B4 09 BA BC 04 CD 21                  print _7_1
+[ 309]    06E9: EB 1B                                 jmp show_min_1_place_1
+[ 310]    06EB: E9 B0 0F                              jmp exit:
+[ 311]    06EE:                                       .jump_render_min_10_place_8_1:
+[ 312]    06EE: B4 09 BA E4 04 CD 21                  print _8_1
+[ 313]    06F5: EB 0F                                 jmp show_min_1_place_1
+[ 314]    06F7: E9 A4 0F                              jmp exit:
+[ 315]    06FA:                                       .jump_render_min_10_place_9_1:
+[ 316]    06FA: B4 09 BA 0C 05 CD 21                  print _9_1
+[ 317]    0701: EB 03                                 jmp show_min_1_place_1
+[ 318]    0703: E9 98 0F                              jmp exit:
+[ 319]        :                                       ; ------------<end>-------------
+[ 320]        :                                       
+[ 321]    0706:                                       show_min_1_place_1:
+[ 322]    0706: 8A 16 07 00                           mov dl,min_1_place
+[ 323]        :                                       
+[ 324]    070A: 80 FA 00                              cmp dl,0
+[ 325]    070D: 74 2D                                 je .jump_render_min_1_place_0_1
+[ 326]    070F: 80 FA 01                              cmp dl,1
+[ 327]    0712: 74 34                                 je .jump_render_min_1_place_1_1
+[ 328]    0714: 80 FA 02                              cmp dl,2
+[ 329]    0717: 74 3B                                 je .jump_render_min_1_place_2_1
+[ 330]    0719: 80 FA 03                              cmp dl,3
+[ 331]    071C: 74 42                                 je .jump_render_min_1_place_3_1
+[ 332]    071E: 80 FA 04                              cmp dl,4
+[ 333]    0721: 74 49                                 je .jump_render_min_1_place_4_1
+[ 334]    0723: 80 FA 05                              cmp dl,5
+[ 335]    0726: 74 50                                 je .jump_render_min_1_place_5_1
+[ 336]    0728: 80 FA 06                              cmp dl,6
+[ 337]    072B: 74 57                                 je .jump_render_min_1_place_6_1
+[ 338]    072D: 80 FA 07                              cmp dl,7
+[ 339]    0730: 74 5E                                 je .jump_render_min_1_place_7_1
+[ 340]    0732: 80 FA 08                              cmp dl,8
+[ 341]    0735: 74 65                                 je .jump_render_min_1_place_8_1
+[ 342]    0737: 80 FA 09                              cmp dl,9
+[ 343]    073A: 74 6C                                 je .jump_render_min_1_place_9_1
+[ 344]        :                                       
+[ 345]    073C:                                       .jump_render_min_1_place_0_1:
+[ 346]    073C: B4 09 BA A4 03 CD 21                  print _0_1
+[ 347]    0743: EB 6F                                 jmp show_colon_1
+[ 348]    0745: E9 56 0F                              jmp exit:
+[ 349]    0748:                                       .jump_render_min_1_place_1_1:
+[ 350]    0748: B4 09 BA CC 03 CD 21                  print _1_1
+[ 351]    074F: EB 63                                 jmp show_colon_1
+[ 352]    0751: E9 4A 0F                              jmp exit:
+[ 353]    0754:                                       .jump_render_min_1_place_2_1:
+[ 354]    0754: B4 09 BA F4 03 CD 21                  print _2_1
+[ 355]    075B: EB 57                                 jmp show_colon_1
+[ 356]    075D: E9 3E 0F                              jmp exit:
+[ 357]    0760:                                       .jump_render_min_1_place_3_1:
+[ 358]    0760: B4 09 BA 1C 04 CD 21                  print _3_1
+[ 359]    0767: EB 4B                                 jmp show_colon_1
+[ 360]    0769: E9 32 0F                              jmp exit:
+[ 361]    076C:                                       .jump_render_min_1_place_4_1:
+[ 362]    076C: B4 09 BA 44 04 CD 21                  print _4_1
+[ 363]    0773: EB 3F                                 jmp show_colon_1
+[ 364]    0775: E9 26 0F                              jmp exit:
+[ 365]    0778:                                       .jump_render_min_1_place_5_1:
+[ 366]    0778: B4 09 BA 6C 04 CD 21                  print _5_1
+[ 367]    077F: EB 33                                 jmp show_colon_1
+[ 368]    0781: E9 1A 0F                              jmp exit:
+[ 369]    0784:                                       .jump_render_min_1_place_6_1:
+[ 370]    0784: B4 09 BA 94 04 CD 21                  print _6_1
+[ 371]    078B: EB 27                                 jmp show_colon_1
+[ 372]    078D: E9 0E 0F                              jmp exit:
+[ 373]    0790:                                       .jump_render_min_1_place_7_1:
+[ 374]    0790: B4 09 BA BC 04 CD 21                  print _7_1
+[ 375]    0797: EB 1B                                 jmp show_colon_1
+[ 376]    0799: E9 02 0F                              jmp exit:
+[ 377]    079C:                                       .jump_render_min_1_place_8_1:
+[ 378]    079C: B4 09 BA E4 04 CD 21                  print _8_1
+[ 379]    07A3: EB 0F                                 jmp show_colon_1
+[ 380]    07A5: E9 F6 0E                              jmp exit:
+[ 381]    07A8:                                       .jump_render_min_1_place_9_1:
+[ 382]    07A8: B4 09 BA 0C 05 CD 21                  print _9_1
+[ 383]    07AF: EB 03                                 jmp show_colon_1
+[ 384]    07B1: E9 EA 0E                              jmp exit:
+[ 385]        :                                       ; ------------<end>-------------
+[ 386]        :                                       
+[ 387]    07B4:                                       show_colon_1:
+[ 388]    07B4: B4 09 BA 34 05 CD 21                  print _x_1
+[ 389]    07BB: EB 00                                 jmp show_sec_10_place_1
+[ 390]        :                                       ; ------------<end>-------------
+[ 391]        :                                       
+[ 392]    07BD:                                       show_sec_10_place_1:
+[ 393]    07BD: 8A 16 06 00                           mov dl,sec_10_place
+[ 394]        :                                       
+[ 395]    07C1: 80 FA 00                              cmp dl,0
+[ 396]    07C4: 74 2D                                 je .jump_render_sec_10_place_0_1
+[ 397]    07C6: 80 FA 01                              cmp dl,1
+[ 398]    07C9: 74 34                                 je .jump_render_sec_10_place_1_1
+[ 399]    07CB: 80 FA 02                              cmp dl,2
+[ 400]    07CE: 74 3B                                 je .jump_render_sec_10_place_2_1
+[ 401]    07D0: 80 FA 03                              cmp dl,3
+[ 402]    07D3: 74 42                                 je .jump_render_sec_10_place_3_1
+[ 403]    07D5: 80 FA 04                              cmp dl,4
+[ 404]    07D8: 74 49                                 je .jump_render_sec_10_place_4_1
+[ 405]    07DA: 80 FA 05                              cmp dl,5
+[ 406]    07DD: 74 50                                 je .jump_render_sec_10_place_5_1
+[ 407]    07DF: 80 FA 06                              cmp dl,6
+[ 408]    07E2: 74 57                                 je .jump_render_sec_10_place_6_1
+[ 409]    07E4: 80 FA 07                              cmp dl,7
+[ 410]    07E7: 74 5E                                 je .jump_render_sec_10_place_7_1
+[ 411]    07E9: 80 FA 08                              cmp dl,8
+[ 412]    07EC: 74 65                                 je .jump_render_sec_10_place_8_1
+[ 413]    07EE: 80 FA 09                              cmp dl,9
+[ 414]    07F1: 74 6C                                 je .jump_render_sec_10_place_9_1
+[ 415]        :                                       
+[ 416]    07F3:                                       .jump_render_sec_10_place_0_1:
+[ 417]    07F3: B4 09 BA A4 03 CD 21                  print _0_1
+[ 418]    07FA: EB 6F                                 jmp show_sec_1_place_1
+[ 419]    07FC: E9 9F 0E                              jmp exit:
+[ 420]    07FF:                                       .jump_render_sec_10_place_1_1:
+[ 421]    07FF: B4 09 BA CC 03 CD 21                  print _1_1
+[ 422]    0806: EB 63                                 jmp show_sec_1_place_1
+[ 423]    0808: E9 93 0E                              jmp exit:
+[ 424]    080B:                                       .jump_render_sec_10_place_2_1:
+[ 425]    080B: B4 09 BA F4 03 CD 21                  print _2_1
+[ 426]    0812: EB 57                                 jmp show_sec_1_place_1
+[ 427]    0814: E9 87 0E                              jmp exit:
+[ 428]    0817:                                       .jump_render_sec_10_place_3_1:
+[ 429]    0817: B4 09 BA 1C 04 CD 21                  print _3_1
+[ 430]    081E: EB 4B                                 jmp show_sec_1_place_1
+[ 431]    0820: E9 7B 0E                              jmp exit:
+[ 432]    0823:                                       .jump_render_sec_10_place_4_1:
+[ 433]    0823: B4 09 BA 44 04 CD 21                  print _4_1
+[ 434]    082A: EB 3F                                 jmp show_sec_1_place_1
+[ 435]    082C: E9 6F 0E                              jmp exit:
+[ 436]    082F:                                       .jump_render_sec_10_place_5_1:
+[ 437]    082F: B4 09 BA 6C 04 CD 21                  print _5_1
+[ 438]    0836: EB 33                                 jmp show_sec_1_place_1
+[ 439]    0838: E9 63 0E                              jmp exit:
+[ 440]    083B:                                       .jump_render_sec_10_place_6_1:
+[ 441]    083B: B4 09 BA 94 04 CD 21                  print _6_1
+[ 442]    0842: EB 27                                 jmp show_sec_1_place_1
+[ 443]    0844: E9 57 0E                              jmp exit:
+[ 444]    0847:                                       .jump_render_sec_10_place_7_1:
+[ 445]    0847: B4 09 BA BC 04 CD 21                  print _7_1
+[ 446]    084E: EB 1B                                 jmp show_sec_1_place_1
+[ 447]    0850: E9 4B 0E                              jmp exit:
+[ 448]    0853:                                       .jump_render_sec_10_place_8_1:
+[ 449]    0853: B4 09 BA E4 04 CD 21                  print _8_1
+[ 450]    085A: EB 0F                                 jmp show_sec_1_place_1
+[ 451]    085C: E9 3F 0E                              jmp exit:
+[ 452]    085F:                                       .jump_render_sec_10_place_9_1:
+[ 453]    085F: B4 09 BA 0C 05 CD 21                  print _9_1
+[ 454]    0866: EB 03                                 jmp show_sec_1_place_1
+[ 455]    0868: E9 33 0E                              jmp exit:
+[ 456]        :                                       ; ------------<end>-------------
+[ 457]        :                                       
+[ 458]    086B:                                       show_sec_1_place_1:
+[ 459]    086B: 8A 16 05 00                           mov dl,sec_1_place
+[ 460]        :                                       
+[ 461]    086F: 80 FA 00                              cmp dl,0
+[ 462]    0872: 74 2D                                 je .jump_render_sec_1_place_0_1
+[ 463]    0874: 80 FA 01                              cmp dl,1
+[ 464]    0877: 74 35                                 je .jump_render_sec_1_place_1_1
+[ 465]    0879: 80 FA 02                              cmp dl,2
+[ 466]    087C: 74 3D                                 je .jump_render_sec_1_place_2_1
+[ 467]    087E: 80 FA 03                              cmp dl,3
+[ 468]    0881: 74 45                                 je .jump_render_sec_1_place_3_1
+[ 469]    0883: 80 FA 04                              cmp dl,4
+[ 470]    0886: 74 4D                                 je .jump_render_sec_1_place_4_1
+[ 471]    0888: 80 FA 05                              cmp dl,5
+[ 472]    088B: 74 55                                 je .jump_render_sec_1_place_5_1
+[ 473]    088D: 80 FA 06                              cmp dl,6
+[ 474]    0890: 74 5D                                 je .jump_render_sec_1_place_6_1
+[ 475]    0892: 80 FA 07                              cmp dl,7
+[ 476]    0895: 74 65                                 je .jump_render_sec_1_place_7_1
+[ 477]    0897: 80 FA 08                              cmp dl,8
+[ 478]    089A: 74 6D                                 je .jump_render_sec_1_place_8_1
+[ 479]    089C: 80 FA 09                              cmp dl,9
+[ 480]    089F: 74 75                                 je .jump_render_sec_1_place_9_1
+[ 481]        :                                       
+[ 482]    08A1:                                       .jump_render_sec_1_place_0_1:
+[ 483]    08A1: B4 09 BA A4 03 CD 21                  print _0_1
+[ 484]    08A8: E8 78 00                              call displayLevel_02
+[ 485]    08AB: E9 F0 0D                              jmp exit:
+[ 486]    08AE:                                       .jump_render_sec_1_place_1_1:
+[ 487]    08AE: B4 09 BA CC 03 CD 21                  print _1_1
+[ 488]    08B5: E8 6B 00                              call displayLevel_02
+[ 489]    08B8: E9 E3 0D                              jmp exit:
+[ 490]    08BB:                                       .jump_render_sec_1_place_2_1:
+[ 491]    08BB: B4 09 BA F4 03 CD 21                  print _2_1
+[ 492]    08C2: E8 5E 00                              call displayLevel_02
+[ 493]    08C5: E9 D6 0D                              jmp exit:
+[ 494]    08C8:                                       .jump_render_sec_1_place_3_1:
+[ 495]    08C8: B4 09 BA 1C 04 CD 21                  print _3_1
+[ 496]    08CF: E8 51 00                              call displayLevel_02
+[ 497]    08D2: E9 C9 0D                              jmp exit:
+[ 498]    08D5:                                       .jump_render_sec_1_place_4_1:
+[ 499]    08D5: B4 09 BA 44 04 CD 21                  print _4_1
+[ 500]    08DC: E8 44 00                              call displayLevel_02
+[ 501]    08DF: E9 BC 0D                              jmp exit:
+[ 502]    08E2:                                       .jump_render_sec_1_place_5_1:
+[ 503]    08E2: B4 09 BA 6C 04 CD 21                  print _5_1
+[ 504]    08E9: E8 37 00                              call displayLevel_02
+[ 505]    08EC: E9 AF 0D                              jmp exit:
+[ 506]    08EF:                                       .jump_render_sec_1_place_6_1:
+[ 507]    08EF: B4 09 BA 94 04 CD 21                  print _6_1
+[ 508]    08F6: E8 2A 00                              call displayLevel_02
+[ 509]    08F9: E9 A2 0D                              jmp exit:
+[ 510]    08FC:                                       .jump_render_sec_1_place_7_1:
+[ 511]    08FC: B4 09 BA BC 04 CD 21                  print _7_1
+[ 512]    0903: E8 1D 00                              call displayLevel_02
+[ 513]    0906: E9 95 0D                              jmp exit:
+[ 514]    0909:                                       .jump_render_sec_1_place_8_1:
+[ 515]    0909: B4 09 BA E4 04 CD 21                  print _8_1
+[ 516]    0910: E8 10 00                              call displayLevel_02
+[ 517]    0913: E9 88 0D                              jmp exit:
+[ 518]    0916:                                       .jump_render_sec_1_place_9_1:
+[ 519]    0916: B4 09 BA 0C 05 CD 21                  print _9_1
+[ 520]    091D: E8 03 00                              call displayLevel_02
+[ 521]    0920: E9 7B 0D                              jmp exit:
+[ 522]        :                                       ; ------------<end>-------------
+[ 523]        :                                       
+[ 524]        :                                       displayLevel_01 ENDP
+[ 525]        :                                       
+[ 526]        :                                       ; ======================
+[ 527]        :                                       ;      Level_02
+[ 528]        :                                       ; ======================
+[ 529]    0923:                                       displayLevel_02 PROC
+[ 530]    0923: B4 02 B2 0A CD 21 B2 0D CD 21         newLine
+[ 531]        :                                       
+[ 532]    092D:                                       show_min_10_place_2:
+[ 533]    092D: 8A 16 08 00                           mov dl,min_10_place
+[ 534]        :                                       
+[ 535]    0931: 80 FA 00                              cmp dl,0
+[ 536]    0934: 74 2D                                 je .jump_render_min_10_place_0_2
+[ 537]    0936: 80 FA 01                              cmp dl,1
+[ 538]    0939: 74 34                                 je .jump_render_min_10_place_1_2
+[ 539]    093B: 80 FA 02                              cmp dl,2
+[ 540]    093E: 74 3B                                 je .jump_render_min_10_place_2_2
+[ 541]    0940: 80 FA 03                              cmp dl,3
+[ 542]    0943: 74 42                                 je .jump_render_min_10_place_3_2
+[ 543]    0945: 80 FA 04                              cmp dl,4
+[ 544]    0948: 74 49                                 je .jump_render_min_10_place_4_2
+[ 545]    094A: 80 FA 05                              cmp dl,5
+[ 546]    094D: 74 50                                 je .jump_render_min_10_place_5_2
+[ 547]    094F: 80 FA 06                              cmp dl,6
+[ 548]    0952: 74 57                                 je .jump_render_min_10_place_6_2
+[ 549]    0954: 80 FA 07                              cmp dl,7
+[ 550]    0957: 74 5E                                 je .jump_render_min_10_place_7_2
+[ 551]    0959: 80 FA 08                              cmp dl,8
+[ 552]    095C: 74 65                                 je .jump_render_min_10_place_8_2
+[ 553]    095E: 80 FA 09                              cmp dl,9
+[ 554]    0961: 74 6C                                 je .jump_render_min_10_place_9_2
+[ 555]        :                                       
+[ 556]    0963:                                       .jump_render_min_10_place_0_2:
+[ 557]    0963: B4 09 BA AC 03 CD 21                  print _0_2
+[ 558]    096A: EB 6F                                 jmp show_min_1_place_2
+[ 559]    096C: E9 2F 0D                              jmp exit:
+[ 560]    096F:                                       .jump_render_min_10_place_1_2:
+[ 561]    096F: B4 09 BA D4 03 CD 21                  print _1_2
+[ 562]    0976: EB 63                                 jmp show_min_1_place_2
+[ 563]    0978: E9 23 0D                              jmp exit:
+[ 564]    097B:                                       .jump_render_min_10_place_2_2:
+[ 565]    097B: B4 09 BA FC 03 CD 21                  print _2_2
+[ 566]    0982: EB 57                                 jmp show_min_1_place_2
+[ 567]    0984: E9 17 0D                              jmp exit:
+[ 568]    0987:                                       .jump_render_min_10_place_3_2:
+[ 569]    0987: B4 09 BA 24 04 CD 21                  print _3_2
+[ 570]    098E: EB 4B                                 jmp show_min_1_place_2
+[ 571]    0990: E9 0B 0D                              jmp exit:
+[ 572]    0993:                                       .jump_render_min_10_place_4_2:
+[ 573]    0993: B4 09 BA 4C 04 CD 21                  print _4_2
+[ 574]    099A: EB 3F                                 jmp show_min_1_place_2
+[ 575]    099C: E9 FF 0C                              jmp exit:
+[ 576]    099F:                                       .jump_render_min_10_place_5_2:
+[ 577]    099F: B4 09 BA 74 04 CD 21                  print _5_2
+[ 578]    09A6: EB 33                                 jmp show_min_1_place_2
+[ 579]    09A8: E9 F3 0C                              jmp exit:
+[ 580]    09AB:                                       .jump_render_min_10_place_6_2:
+[ 581]    09AB: B4 09 BA 9C 04 CD 21                  print _6_2
+[ 582]    09B2: EB 27                                 jmp show_min_1_place_2
+[ 583]    09B4: E9 E7 0C                              jmp exit:
+[ 584]    09B7:                                       .jump_render_min_10_place_7_2:
+[ 585]    09B7: B4 09 BA C4 04 CD 21                  print _7_2
+[ 586]    09BE: EB 1B                                 jmp show_min_1_place_2
+[ 587]    09C0: E9 DB 0C                              jmp exit:
+[ 588]    09C3:                                       .jump_render_min_10_place_8_2:
+[ 589]    09C3: B4 09 BA EC 04 CD 21                  print _8_2
+[ 590]    09CA: EB 0F                                 jmp show_min_1_place_2
+[ 591]    09CC: E9 CF 0C                              jmp exit:
+[ 592]    09CF:                                       .jump_render_min_10_place_9_2:
+[ 593]    09CF: B4 09 BA 14 05 CD 21                  print _9_2
+[ 594]    09D6: EB 03                                 jmp show_min_1_place_2
+[ 595]    09D8: E9 C3 0C                              jmp exit:
+[ 596]        :                                       ; ------------<end>-------------
+[ 597]        :                                       
+[ 598]    09DB:                                       show_min_1_place_2:
+[ 599]    09DB: 8A 16 07 00                           mov dl,min_1_place
+[ 600]        :                                       
+[ 601]    09DF: 80 FA 00                              cmp dl,0
+[ 602]    09E2: 74 2D                                 je .jump_render_min_1_place_0_2
+[ 603]    09E4: 80 FA 01                              cmp dl,1
+[ 604]    09E7: 74 34                                 je .jump_render_min_1_place_1_2
+[ 605]    09E9: 80 FA 02                              cmp dl,2
+[ 606]    09EC: 74 3B                                 je .jump_render_min_1_place_2_2
+[ 607]    09EE: 80 FA 03                              cmp dl,3
+[ 608]    09F1: 74 42                                 je .jump_render_min_1_place_3_2
+[ 609]    09F3: 80 FA 04                              cmp dl,4
+[ 610]    09F6: 74 49                                 je .jump_render_min_1_place_4_2
+[ 611]    09F8: 80 FA 05                              cmp dl,5
+[ 612]    09FB: 74 50                                 je .jump_render_min_1_place_5_2
+[ 613]    09FD: 80 FA 06                              cmp dl,6
+[ 614]    0A00: 74 57                                 je .jump_render_min_1_place_6_2
+[ 615]    0A02: 80 FA 07                              cmp dl,7
+[ 616]    0A05: 74 5E                                 je .jump_render_min_1_place_7_2
+[ 617]    0A07: 80 FA 08                              cmp dl,8
+[ 618]    0A0A: 74 65                                 je .jump_render_min_1_place_8_2
+[ 619]    0A0C: 80 FA 09                              cmp dl,9
+[ 620]    0A0F: 74 6C                                 je .jump_render_min_1_place_9_2
+[ 621]        :                                       
+[ 622]    0A11:                                       .jump_render_min_1_place_0_2:
+[ 623]    0A11: B4 09 BA AC 03 CD 21                  print _0_2
+[ 624]    0A18: EB 6F                                 jmp show_colon_2
+[ 625]    0A1A: E9 81 0C                              jmp exit:
+[ 626]    0A1D:                                       .jump_render_min_1_place_1_2:
+[ 627]    0A1D: B4 09 BA D4 03 CD 21                  print _1_2
+[ 628]    0A24: EB 63                                 jmp show_colon_2
+[ 629]    0A26: E9 75 0C                              jmp exit:
+[ 630]    0A29:                                       .jump_render_min_1_place_2_2:
+[ 631]    0A29: B4 09 BA FC 03 CD 21                  print _2_2
+[ 632]    0A30: EB 57                                 jmp show_colon_2
+[ 633]    0A32: E9 69 0C                              jmp exit:
+[ 634]    0A35:                                       .jump_render_min_1_place_3_2:
+[ 635]    0A35: B4 09 BA 24 04 CD 21                  print _3_2
+[ 636]    0A3C: EB 4B                                 jmp show_colon_2
+[ 637]    0A3E: E9 5D 0C                              jmp exit:
+[ 638]    0A41:                                       .jump_render_min_1_place_4_2:
+[ 639]    0A41: B4 09 BA 4C 04 CD 21                  print _4_2
+[ 640]    0A48: EB 3F                                 jmp show_colon_2
+[ 641]    0A4A: E9 51 0C                              jmp exit:
+[ 642]    0A4D:                                       .jump_render_min_1_place_5_2:
+[ 643]    0A4D: B4 09 BA 74 04 CD 21                  print _5_2
+[ 644]    0A54: EB 33                                 jmp show_colon_2
+[ 645]    0A56: E9 45 0C                              jmp exit:
+[ 646]    0A59:                                       .jump_render_min_1_place_6_2:
+[ 647]    0A59: B4 09 BA 9C 04 CD 21                  print _6_2
+[ 648]    0A60: EB 27                                 jmp show_colon_2
+[ 649]    0A62: E9 39 0C                              jmp exit:
+[ 650]    0A65:                                       .jump_render_min_1_place_7_2:
+[ 651]    0A65: B4 09 BA C4 04 CD 21                  print _7_2
+[ 652]    0A6C: EB 1B                                 jmp show_colon_2
+[ 653]    0A6E: E9 2D 0C                              jmp exit:
+[ 654]    0A71:                                       .jump_render_min_1_place_8_2:
+[ 655]    0A71: B4 09 BA EC 04 CD 21                  print _8_2
+[ 656]    0A78: EB 0F                                 jmp show_colon_2
+[ 657]    0A7A: E9 21 0C                              jmp exit:
+[ 658]    0A7D:                                       .jump_render_min_1_place_9_2:
+[ 659]    0A7D: B4 09 BA 14 05 CD 21                  print _9_2
+[ 660]    0A84: EB 03                                 jmp show_colon_2
+[ 661]    0A86: E9 15 0C                              jmp exit:
+[ 662]        :                                       ; ------------<end>-------------
+[ 663]        :                                       
+[ 664]    0A89:                                       show_colon_2:
+[ 665]    0A89: B4 09 BA 38 05 CD 21                  print _x_2
+[ 666]    0A90: EB 00                                 jmp show_sec_10_place_2
+[ 667]        :                                       ; ------------<end>-------------
+[ 668]        :                                       
+[ 669]    0A92:                                       show_sec_10_place_2:
+[ 670]    0A92: 8A 16 06 00                           mov dl,sec_10_place
+[ 671]        :                                       
+[ 672]    0A96: 80 FA 00                              cmp dl,0
+[ 673]    0A99: 74 2D                                 je .jump_render_sec_10_place_0_2
+[ 674]    0A9B: 80 FA 01                              cmp dl,1
+[ 675]    0A9E: 74 34                                 je .jump_render_sec_10_place_1_2
+[ 676]    0AA0: 80 FA 02                              cmp dl,2
+[ 677]    0AA3: 74 3B                                 je .jump_render_sec_10_place_2_2
+[ 678]    0AA5: 80 FA 03                              cmp dl,3
+[ 679]    0AA8: 74 42                                 je .jump_render_sec_10_place_3_2
+[ 680]    0AAA: 80 FA 04                              cmp dl,4
+[ 681]    0AAD: 74 49                                 je .jump_render_sec_10_place_4_2
+[ 682]    0AAF: 80 FA 05                              cmp dl,5
+[ 683]    0AB2: 74 50                                 je .jump_render_sec_10_place_5_2
+[ 684]    0AB4: 80 FA 06                              cmp dl,6
+[ 685]    0AB7: 74 57                                 je .jump_render_sec_10_place_6_2
+[ 686]    0AB9: 80 FA 07                              cmp dl,7
+[ 687]    0ABC: 74 5E                                 je .jump_render_sec_10_place_7_2
+[ 688]    0ABE: 80 FA 08                              cmp dl,8
+[ 689]    0AC1: 74 65                                 je .jump_render_sec_10_place_8_2
+[ 690]    0AC3: 80 FA 09                              cmp dl,9
+[ 691]    0AC6: 74 6C                                 je .jump_render_sec_10_place_9_2
+[ 692]        :                                       
+[ 693]    0AC8:                                       .jump_render_sec_10_place_0_2:
+[ 694]    0AC8: B4 09 BA AC 03 CD 21                  print _0_2
+[ 695]    0ACF: EB 6F                                 jmp show_sec_1_place_2
+[ 696]    0AD1: E9 CA 0B                              jmp exit:
+[ 697]    0AD4:                                       .jump_render_sec_10_place_1_2:
+[ 698]    0AD4: B4 09 BA D4 03 CD 21                  print _1_2
+[ 699]    0ADB: EB 63                                 jmp show_sec_1_place_2
+[ 700]    0ADD: E9 BE 0B                              jmp exit:
+[ 701]    0AE0:                                       .jump_render_sec_10_place_2_2:
+[ 702]    0AE0: B4 09 BA FC 03 CD 21                  print _2_2
+[ 703]    0AE7: EB 57                                 jmp show_sec_1_place_2
+[ 704]    0AE9: E9 B2 0B                              jmp exit:
+[ 705]    0AEC:                                       .jump_render_sec_10_place_3_2:
+[ 706]    0AEC: B4 09 BA 24 04 CD 21                  print _3_2
+[ 707]    0AF3: EB 4B                                 jmp show_sec_1_place_2
+[ 708]    0AF5: E9 A6 0B                              jmp exit:
+[ 709]    0AF8:                                       .jump_render_sec_10_place_4_2:
+[ 710]    0AF8: B4 09 BA 4C 04 CD 21                  print _4_2
+[ 711]    0AFF: EB 3F                                 jmp show_sec_1_place_2
+[ 712]    0B01: E9 9A 0B                              jmp exit:
+[ 713]    0B04:                                       .jump_render_sec_10_place_5_2:
+[ 714]    0B04: B4 09 BA 74 04 CD 21                  print _5_2
+[ 715]    0B0B: EB 33                                 jmp show_sec_1_place_2
+[ 716]    0B0D: E9 8E 0B                              jmp exit:
+[ 717]    0B10:                                       .jump_render_sec_10_place_6_2:
+[ 718]    0B10: B4 09 BA 9C 04 CD 21                  print _6_2
+[ 719]    0B17: EB 27                                 jmp show_sec_1_place_2
+[ 720]    0B19: E9 82 0B                              jmp exit:
+[ 721]    0B1C:                                       .jump_render_sec_10_place_7_2:
+[ 722]    0B1C: B4 09 BA C4 04 CD 21                  print _7_2
+[ 723]    0B23: EB 1B                                 jmp show_sec_1_place_2
+[ 724]    0B25: E9 76 0B                              jmp exit:
+[ 725]    0B28:                                       .jump_render_sec_10_place_8_2:
+[ 726]    0B28: B4 09 BA EC 04 CD 21                  print _8_2
+[ 727]    0B2F: EB 0F                                 jmp show_sec_1_place_2
+[ 728]    0B31: E9 6A 0B                              jmp exit:
+[ 729]    0B34:                                       .jump_render_sec_10_place_9_2:
+[ 730]    0B34: B4 09 BA 14 05 CD 21                  print _9_2
+[ 731]    0B3B: EB 03                                 jmp show_sec_1_place_2
+[ 732]    0B3D: E9 5E 0B                              jmp exit:
+[ 733]        :                                       ; ------------<end>-------------
+[ 734]        :                                       
+[ 735]    0B40:                                       show_sec_1_place_2:
+[ 736]    0B40: 8A 16 05 00                           mov dl,sec_1_place
+[ 737]        :                                       
+[ 738]    0B44: 80 FA 00                              cmp dl,0
+[ 739]    0B47: 74 2D                                 je .jump_render_sec_1_place_0_2
+[ 740]    0B49: 80 FA 01                              cmp dl,1
+[ 741]    0B4C: 74 35                                 je .jump_render_sec_1_place_1_2
+[ 742]    0B4E: 80 FA 02                              cmp dl,2
+[ 743]    0B51: 74 3D                                 je .jump_render_sec_1_place_2_2
+[ 744]    0B53: 80 FA 03                              cmp dl,3
+[ 745]    0B56: 74 45                                 je .jump_render_sec_1_place_3_2
+[ 746]    0B58: 80 FA 04                              cmp dl,4
+[ 747]    0B5B: 74 4D                                 je .jump_render_sec_1_place_4_2
+[ 748]    0B5D: 80 FA 05                              cmp dl,5
+[ 749]    0B60: 74 55                                 je .jump_render_sec_1_place_5_2
+[ 750]    0B62: 80 FA 06                              cmp dl,6
+[ 751]    0B65: 74 5D                                 je .jump_render_sec_1_place_6_2
+[ 752]    0B67: 80 FA 07                              cmp dl,7
+[ 753]    0B6A: 74 65                                 je .jump_render_sec_1_place_7_2
+[ 754]    0B6C: 80 FA 08                              cmp dl,8
+[ 755]    0B6F: 74 6D                                 je .jump_render_sec_1_place_8_2
+[ 756]    0B71: 80 FA 09                              cmp dl,9
+[ 757]    0B74: 74 75                                 je .jump_render_sec_1_place_9_2
+[ 758]        :                                       
+[ 759]    0B76:                                       .jump_render_sec_1_place_0_2:
+[ 760]    0B76: B4 09 BA AC 03 CD 21                  print _0_2
+[ 761]    0B7D: E8 78 00                              call displayLevel_03
+[ 762]    0B80: E9 1B 0B                              jmp exit:
+[ 763]    0B83:                                       .jump_render_sec_1_place_1_2:
+[ 764]    0B83: B4 09 BA D4 03 CD 21                  print _1_2
+[ 765]    0B8A: E8 6B 00                              call displayLevel_03
+[ 766]    0B8D: E9 0E 0B                              jmp exit:
+[ 767]    0B90:                                       .jump_render_sec_1_place_2_2:
+[ 768]    0B90: B4 09 BA FC 03 CD 21                  print _2_2
+[ 769]    0B97: E8 5E 00                              call displayLevel_03
+[ 770]    0B9A: E9 01 0B                              jmp exit:
+[ 771]    0B9D:                                       .jump_render_sec_1_place_3_2:
+[ 772]    0B9D: B4 09 BA 24 04 CD 21                  print _3_2
+[ 773]    0BA4: E8 51 00                              call displayLevel_03
+[ 774]    0BA7: E9 F4 0A                              jmp exit:
+[ 775]    0BAA:                                       .jump_render_sec_1_place_4_2:
+[ 776]    0BAA: B4 09 BA 4C 04 CD 21                  print _4_2
+[ 777]    0BB1: E8 44 00                              call displayLevel_03
+[ 778]    0BB4: E9 E7 0A                              jmp exit:
+[ 779]    0BB7:                                       .jump_render_sec_1_place_5_2:
+[ 780]    0BB7: B4 09 BA 74 04 CD 21                  print _5_2
+[ 781]    0BBE: E8 37 00                              call displayLevel_03
+[ 782]    0BC1: E9 DA 0A                              jmp exit:
+[ 783]    0BC4:                                       .jump_render_sec_1_place_6_2:
+[ 784]    0BC4: B4 09 BA 9C 04 CD 21                  print _6_2
+[ 785]    0BCB: E8 2A 00                              call displayLevel_03
+[ 786]    0BCE: E9 CD 0A                              jmp exit:
+[ 787]    0BD1:                                       .jump_render_sec_1_place_7_2:
+[ 788]    0BD1: B4 09 BA C4 04 CD 21                  print _7_2
+[ 789]    0BD8: E8 1D 00                              call displayLevel_03
+[ 790]    0BDB: E9 C0 0A                              jmp exit:
+[ 791]    0BDE:                                       .jump_render_sec_1_place_8_2:
+[ 792]    0BDE: B4 09 BA EC 04 CD 21                  print _8_2
+[ 793]    0BE5: E8 10 00                              call displayLevel_03
+[ 794]    0BE8: E9 B3 0A                              jmp exit:
+[ 795]    0BEB:                                       .jump_render_sec_1_place_9_2:
+[ 796]    0BEB: B4 09 BA 14 05 CD 21                  print _9_2
+[ 797]    0BF2: E8 03 00                              call displayLevel_03
+[ 798]    0BF5: E9 A6 0A                              jmp exit:
+[ 799]        :                                       ; ------------<end>-------------
+[ 800]        :                                       
+[ 801]        :                                       displayLevel_02 ENDP
+[ 802]        :                                       
+[ 803]        :                                       
+[ 804]        :                                       ; ======================
+[ 805]        :                                       ;      Level_03
+[ 806]        :                                       ; ======================
+[ 807]    0BF8:                                       displayLevel_03 PROC
+[ 808]    0BF8: B4 02 B2 0A CD 21 B2 0D CD 21         newLine
+[ 809]        :                                       
+[ 810]    0C02:                                       show_min_10_place_3:
+[ 811]    0C02: 8A 16 08 00                           mov dl,min_10_place
+[ 812]        :                                       
+[ 813]    0C06: 80 FA 00                              cmp dl,0
+[ 814]    0C09: 74 2D                                 je .jump_render_min_10_place_0_3
+[ 815]    0C0B: 80 FA 01                              cmp dl,1
+[ 816]    0C0E: 74 34                                 je .jump_render_min_10_place_1_3
+[ 817]    0C10: 80 FA 02                              cmp dl,2
+[ 818]    0C13: 74 3B                                 je .jump_render_min_10_place_2_3
+[ 819]    0C15: 80 FA 03                              cmp dl,3
+[ 820]    0C18: 74 42                                 je .jump_render_min_10_place_3_3
+[ 821]    0C1A: 80 FA 04                              cmp dl,4
+[ 822]    0C1D: 74 49                                 je .jump_render_min_10_place_4_3
+[ 823]    0C1F: 80 FA 05                              cmp dl,5
+[ 824]    0C22: 74 50                                 je .jump_render_min_10_place_5_3
+[ 825]    0C24: 80 FA 06                              cmp dl,6
+[ 826]    0C27: 74 57                                 je .jump_render_min_10_place_6_3
+[ 827]    0C29: 80 FA 07                              cmp dl,7
+[ 828]    0C2C: 74 5E                                 je .jump_render_min_10_place_7_3
+[ 829]    0C2E: 80 FA 08                              cmp dl,8
+[ 830]    0C31: 74 65                                 je .jump_render_min_10_place_8_3
+[ 831]    0C33: 80 FA 09                              cmp dl,9
+[ 832]    0C36: 74 6C                                 je .jump_render_min_10_place_9_3
+[ 833]        :                                       
+[ 834]    0C38:                                       .jump_render_min_10_place_0_3:
+[ 835]    0C38: B4 09 BA B4 03 CD 21                  print _0_3
+[ 836]    0C3F: EB 6F                                 jmp show_min_1_place_3
+[ 837]    0C41: E9 5A 0A                              jmp exit:
+[ 838]    0C44:                                       .jump_render_min_10_place_1_3:
+[ 839]    0C44: B4 09 BA DC 03 CD 21                  print _1_3
+[ 840]    0C4B: EB 63                                 jmp show_min_1_place_3
+[ 841]    0C4D: E9 4E 0A                              jmp exit:
+[ 842]    0C50:                                       .jump_render_min_10_place_2_3:
+[ 843]    0C50: B4 09 BA 04 04 CD 21                  print _2_3
+[ 844]    0C57: EB 57                                 jmp show_min_1_place_3
+[ 845]    0C59: E9 42 0A                              jmp exit:
+[ 846]    0C5C:                                       .jump_render_min_10_place_3_3:
+[ 847]    0C5C: B4 09 BA 2C 04 CD 21                  print _3_3
+[ 848]    0C63: EB 4B                                 jmp show_min_1_place_3
+[ 849]    0C65: E9 36 0A                              jmp exit:
+[ 850]    0C68:                                       .jump_render_min_10_place_4_3:
+[ 851]    0C68: B4 09 BA 54 04 CD 21                  print _4_3
+[ 852]    0C6F: EB 3F                                 jmp show_min_1_place_3
+[ 853]    0C71: E9 2A 0A                              jmp exit:
+[ 854]    0C74:                                       .jump_render_min_10_place_5_3:
+[ 855]    0C74: B4 09 BA 7C 04 CD 21                  print _5_3
+[ 856]    0C7B: EB 33                                 jmp show_min_1_place_3
+[ 857]    0C7D: E9 1E 0A                              jmp exit:
+[ 858]    0C80:                                       .jump_render_min_10_place_6_3:
+[ 859]    0C80: B4 09 BA A4 04 CD 21                  print _6_3
+[ 860]    0C87: EB 27                                 jmp show_min_1_place_3
+[ 861]    0C89: E9 12 0A                              jmp exit:
+[ 862]    0C8C:                                       .jump_render_min_10_place_7_3:
+[ 863]    0C8C: B4 09 BA CC 04 CD 21                  print _7_3
+[ 864]    0C93: EB 1B                                 jmp show_min_1_place_3
+[ 865]    0C95: E9 06 0A                              jmp exit:
+[ 866]    0C98:                                       .jump_render_min_10_place_8_3:
+[ 867]    0C98: B4 09 BA F4 04 CD 21                  print _8_3
+[ 868]    0C9F: EB 0F                                 jmp show_min_1_place_3
+[ 869]    0CA1: E9 FA 09                              jmp exit:
+[ 870]    0CA4:                                       .jump_render_min_10_place_9_3:
+[ 871]    0CA4: B4 09 BA 1C 05 CD 21                  print _9_3
+[ 872]    0CAB: EB 03                                 jmp show_min_1_place_3
+[ 873]    0CAD: E9 EE 09                              jmp exit:
+[ 874]        :                                       ; ------------<end>-------------
+[ 875]        :                                       
+[ 876]    0CB0:                                       show_min_1_place_3:
+[ 877]    0CB0: 8A 16 07 00                           mov dl,min_1_place
+[ 878]        :                                       
+[ 879]    0CB4: 80 FA 00                              cmp dl,0
+[ 880]    0CB7: 74 2D                                 je .jump_render_min_1_place_0_3
+[ 881]    0CB9: 80 FA 01                              cmp dl,1
+[ 882]    0CBC: 74 34                                 je .jump_render_min_1_place_1_3
+[ 883]    0CBE: 80 FA 02                              cmp dl,2
+[ 884]    0CC1: 74 3B                                 je .jump_render_min_1_place_2_3
+[ 885]    0CC3: 80 FA 03                              cmp dl,3
+[ 886]    0CC6: 74 42                                 je .jump_render_min_1_place_3_3
+[ 887]    0CC8: 80 FA 04                              cmp dl,4
+[ 888]    0CCB: 74 49                                 je .jump_render_min_1_place_4_3
+[ 889]    0CCD: 80 FA 05                              cmp dl,5
+[ 890]    0CD0: 74 50                                 je .jump_render_min_1_place_5_3
+[ 891]    0CD2: 80 FA 06                              cmp dl,6
+[ 892]    0CD5: 74 57                                 je .jump_render_min_1_place_6_3
+[ 893]    0CD7: 80 FA 07                              cmp dl,7
+[ 894]    0CDA: 74 5E                                 je .jump_render_min_1_place_7_3
+[ 895]    0CDC: 80 FA 08                              cmp dl,8
+[ 896]    0CDF: 74 65                                 je .jump_render_min_1_place_8_3
+[ 897]    0CE1: 80 FA 09                              cmp dl,9
+[ 898]    0CE4: 74 6C                                 je .jump_render_min_1_place_9_3
+[ 899]        :                                       
+[ 900]    0CE6:                                       .jump_render_min_1_place_0_3:
+[ 901]    0CE6: B4 09 BA B4 03 CD 21                  print _0_3
+[ 902]    0CED: EB 6F                                 jmp show_colon_3
+[ 903]    0CEF: E9 AC 09                              jmp exit:
+[ 904]    0CF2:                                       .jump_render_min_1_place_1_3:
+[ 905]    0CF2: B4 09 BA DC 03 CD 21                  print _1_3
+[ 906]    0CF9: EB 63                                 jmp show_colon_3
+[ 907]    0CFB: E9 A0 09                              jmp exit:
+[ 908]    0CFE:                                       .jump_render_min_1_place_2_3:
+[ 909]    0CFE: B4 09 BA 04 04 CD 21                  print _2_3
+[ 910]    0D05: EB 57                                 jmp show_colon_3
+[ 911]    0D07: E9 94 09                              jmp exit:
+[ 912]    0D0A:                                       .jump_render_min_1_place_3_3:
+[ 913]    0D0A: B4 09 BA 2C 04 CD 21                  print _3_3
+[ 914]    0D11: EB 4B                                 jmp show_colon_3
+[ 915]    0D13: E9 88 09                              jmp exit:
+[ 916]    0D16:                                       .jump_render_min_1_place_4_3:
+[ 917]    0D16: B4 09 BA 54 04 CD 21                  print _4_3
+[ 918]    0D1D: EB 3F                                 jmp show_colon_3
+[ 919]    0D1F: E9 7C 09                              jmp exit:
+[ 920]    0D22:                                       .jump_render_min_1_place_5_3:
+[ 921]    0D22: B4 09 BA 7C 04 CD 21                  print _5_3
+[ 922]    0D29: EB 33                                 jmp show_colon_3
+[ 923]    0D2B: E9 70 09                              jmp exit:
+[ 924]    0D2E:                                       .jump_render_min_1_place_6_3:
+[ 925]    0D2E: B4 09 BA A4 04 CD 21                  print _6_3
+[ 926]    0D35: EB 27                                 jmp show_colon_3
+[ 927]    0D37: E9 64 09                              jmp exit:
+[ 928]    0D3A:                                       .jump_render_min_1_place_7_3:
+[ 929]    0D3A: B4 09 BA CC 04 CD 21                  print _7_3
+[ 930]    0D41: EB 1B                                 jmp show_colon_3
+[ 931]    0D43: E9 58 09                              jmp exit:
+[ 932]    0D46:                                       .jump_render_min_1_place_8_3:
+[ 933]    0D46: B4 09 BA F4 04 CD 21                  print _8_3
+[ 934]    0D4D: EB 0F                                 jmp show_colon_3
+[ 935]    0D4F: E9 4C 09                              jmp exit:
+[ 936]    0D52:                                       .jump_render_min_1_place_9_3:
+[ 937]    0D52: B4 09 BA 1C 05 CD 21                  print _9_3
+[ 938]    0D59: EB 03                                 jmp show_colon_3
+[ 939]    0D5B: E9 40 09                              jmp exit:
+[ 940]        :                                       ; ------------<end>-------------
+[ 941]        :                                       
+[ 942]    0D5E:                                       show_colon_3:
+[ 943]    0D5E: B4 09 BA 3C 05 CD 21                  print _x_3
+[ 944]    0D65: EB 00                                 jmp show_sec_10_place_3
+[ 945]        :                                       ; ------------<end>-------------
+[ 946]        :                                       
+[ 947]    0D67:                                       show_sec_10_place_3:
+[ 948]    0D67: 8A 16 06 00                           mov dl,sec_10_place
+[ 949]        :                                       
+[ 950]    0D6B: 80 FA 00                              cmp dl,0
+[ 951]    0D6E: 74 2D                                 je .jump_render_sec_10_place_0_3
+[ 952]    0D70: 80 FA 01                              cmp dl,1
+[ 953]    0D73: 74 34                                 je .jump_render_sec_10_place_1_3
+[ 954]    0D75: 80 FA 02                              cmp dl,2
+[ 955]    0D78: 74 3B                                 je .jump_render_sec_10_place_2_3
+[ 956]    0D7A: 80 FA 03                              cmp dl,3
+[ 957]    0D7D: 74 42                                 je .jump_render_sec_10_place_3_3
+[ 958]    0D7F: 80 FA 04                              cmp dl,4
+[ 959]    0D82: 74 49                                 je .jump_render_sec_10_place_4_3
+[ 960]    0D84: 80 FA 05                              cmp dl,5
+[ 961]    0D87: 74 50                                 je .jump_render_sec_10_place_5_3
+[ 962]    0D89: 80 FA 06                              cmp dl,6
+[ 963]    0D8C: 74 57                                 je .jump_render_sec_10_place_6_3
+[ 964]    0D8E: 80 FA 07                              cmp dl,7
+[ 965]    0D91: 74 5E                                 je .jump_render_sec_10_place_7_3
+[ 966]    0D93: 80 FA 08                              cmp dl,8
+[ 967]    0D96: 74 65                                 je .jump_render_sec_10_place_8_3
+[ 968]    0D98: 80 FA 09                              cmp dl,9
+[ 969]    0D9B: 74 6C                                 je .jump_render_sec_10_place_9_3
+[ 970]        :                                       
+[ 971]    0D9D:                                       .jump_render_sec_10_place_0_3:
+[ 972]    0D9D: B4 09 BA B4 03 CD 21                  print _0_3
+[ 973]    0DA4: EB 6F                                 jmp show_sec_1_place_3
+[ 974]    0DA6: E9 F5 08                              jmp exit:
+[ 975]    0DA9:                                       .jump_render_sec_10_place_1_3:
+[ 976]    0DA9: B4 09 BA DC 03 CD 21                  print _1_3
+[ 977]    0DB0: EB 63                                 jmp show_sec_1_place_3
+[ 978]    0DB2: E9 E9 08                              jmp exit:
+[ 979]    0DB5:                                       .jump_render_sec_10_place_2_3:
+[ 980]    0DB5: B4 09 BA 04 04 CD 21                  print _2_3
+[ 981]    0DBC: EB 57                                 jmp show_sec_1_place_3
+[ 982]    0DBE: E9 DD 08                              jmp exit:
+[ 983]    0DC1:                                       .jump_render_sec_10_place_3_3:
+[ 984]    0DC1: B4 09 BA 2C 04 CD 21                  print _3_3
+[ 985]    0DC8: EB 4B                                 jmp show_sec_1_place_3
+[ 986]    0DCA: E9 D1 08                              jmp exit:
+[ 987]    0DCD:                                       .jump_render_sec_10_place_4_3:
+[ 988]    0DCD: B4 09 BA 54 04 CD 21                  print _4_3
+[ 989]    0DD4: EB 3F                                 jmp show_sec_1_place_3
+[ 990]    0DD6: E9 C5 08                              jmp exit:
+[ 991]    0DD9:                                       .jump_render_sec_10_place_5_3:
+[ 992]    0DD9: B4 09 BA 7C 04 CD 21                  print _5_3
+[ 993]    0DE0: EB 33                                 jmp show_sec_1_place_3
+[ 994]    0DE2: E9 B9 08                              jmp exit:
+[ 995]    0DE5:                                       .jump_render_sec_10_place_6_3:
+[ 996]    0DE5: B4 09 BA A4 04 CD 21                  print _6_3
+[ 997]    0DEC: EB 27                                 jmp show_sec_1_place_3
+[ 998]    0DEE: E9 AD 08                              jmp exit:
+[ 999]    0DF1:                                       .jump_render_sec_10_place_7_3:
+[1000]    0DF1: B4 09 BA CC 04 CD 21                  print _7_3
+[1001]    0DF8: EB 1B                                 jmp show_sec_1_place_3
+[1002]    0DFA: E9 A1 08                              jmp exit:
+[1003]    0DFD:                                       .jump_render_sec_10_place_8_3:
+[1004]    0DFD: B4 09 BA F4 04 CD 21                  print _8_3
+[1005]    0E04: EB 0F                                 jmp show_sec_1_place_3
+[1006]    0E06: E9 95 08                              jmp exit:
+[1007]    0E09:                                       .jump_render_sec_10_place_9_3:
+[1008]    0E09: B4 09 BA 1C 05 CD 21                  print _9_3
+[1009]    0E10: EB 03                                 jmp show_sec_1_place_3
+[1010]    0E12: E9 89 08                              jmp exit:
+[1011]        :                                       ; ------------<end>-------------
+[1012]        :                                       
+[1013]    0E15:                                       show_sec_1_place_3:
+[1014]    0E15: 8A 16 05 00                           mov dl,sec_1_place
+[1015]        :                                       
+[1016]    0E19: 80 FA 00                              cmp dl,0
+[1017]    0E1C: 74 2D                                 je .jump_render_sec_1_place_0_3
+[1018]    0E1E: 80 FA 01                              cmp dl,1
+[1019]    0E21: 74 35                                 je .jump_render_sec_1_place_1_3
+[1020]    0E23: 80 FA 02                              cmp dl,2
+[1021]    0E26: 74 3D                                 je .jump_render_sec_1_place_2_3
+[1022]    0E28: 80 FA 03                              cmp dl,3
+[1023]    0E2B: 74 45                                 je .jump_render_sec_1_place_3_3
+[1024]    0E2D: 80 FA 04                              cmp dl,4
+[1025]    0E30: 74 4D                                 je .jump_render_sec_1_place_4_3
+[1026]    0E32: 80 FA 05                              cmp dl,5
+[1027]    0E35: 74 55                                 je .jump_render_sec_1_place_5_3
+[1028]    0E37: 80 FA 06                              cmp dl,6
+[1029]    0E3A: 74 5D                                 je .jump_render_sec_1_place_6_3
+[1030]    0E3C: 80 FA 07                              cmp dl,7
+[1031]    0E3F: 74 65                                 je .jump_render_sec_1_place_7_3
+[1032]    0E41: 80 FA 08                              cmp dl,8
+[1033]    0E44: 74 6D                                 je .jump_render_sec_1_place_8_3
+[1034]    0E46: 80 FA 09                              cmp dl,9
+[1035]    0E49: 74 75                                 je .jump_render_sec_1_place_9_3
+[1036]        :                                       
+[1037]    0E4B:                                       .jump_render_sec_1_place_0_3:
+[1038]    0E4B: B4 09 BA B4 03 CD 21                  print _0_3
+[1039]    0E52: E8 78 00                              call displayLevel_04
+[1040]    0E55: E9 46 08                              jmp exit:
+[1041]    0E58:                                       .jump_render_sec_1_place_1_3:
+[1042]    0E58: B4 09 BA DC 03 CD 21                  print _1_3
+[1043]    0E5F: E8 6B 00                              call displayLevel_04
+[1044]    0E62: E9 39 08                              jmp exit:
+[1045]    0E65:                                       .jump_render_sec_1_place_2_3:
+[1046]    0E65: B4 09 BA 04 04 CD 21                  print _2_3
+[1047]    0E6C: E8 5E 00                              call displayLevel_04
+[1048]    0E6F: E9 2C 08                              jmp exit:
+[1049]    0E72:                                       .jump_render_sec_1_place_3_3:
+[1050]    0E72: B4 09 BA 2C 04 CD 21                  print _3_3
+[1051]    0E79: E8 51 00                              call displayLevel_04
+[1052]    0E7C: E9 1F 08                              jmp exit:
+[1053]    0E7F:                                       .jump_render_sec_1_place_4_3:
+[1054]    0E7F: B4 09 BA 54 04 CD 21                  print _4_3
+[1055]    0E86: E8 44 00                              call displayLevel_04
+[1056]    0E89: E9 12 08                              jmp exit:
+[1057]    0E8C:                                       .jump_render_sec_1_place_5_3:
+[1058]    0E8C: B4 09 BA 7C 04 CD 21                  print _5_3
+[1059]    0E93: E8 37 00                              call displayLevel_04
+[1060]    0E96: E9 05 08                              jmp exit:
+[1061]    0E99:                                       .jump_render_sec_1_place_6_3:
+[1062]    0E99: B4 09 BA A4 04 CD 21                  print _6_3
+[1063]    0EA0: E8 2A 00                              call displayLevel_04
+[1064]    0EA3: E9 F8 07                              jmp exit:
+[1065]    0EA6:                                       .jump_render_sec_1_place_7_3:
+[1066]    0EA6: B4 09 BA CC 04 CD 21                  print _7_3
+[1067]    0EAD: E8 1D 00                              call displayLevel_04
+[1068]    0EB0: E9 EB 07                              jmp exit:
+[1069]    0EB3:                                       .jump_render_sec_1_place_8_3:
+[1070]    0EB3: B4 09 BA F4 04 CD 21                  print _8_3
+[1071]    0EBA: E8 10 00                              call displayLevel_04
+[1072]    0EBD: E9 DE 07                              jmp exit:
+[1073]    0EC0:                                       .jump_render_sec_1_place_9_3:
+[1074]    0EC0: B4 09 BA 1C 05 CD 21                  print _9_3
+[1075]    0EC7: E8 03 00                              call displayLevel_04
+[1076]    0ECA: E9 D1 07                              jmp exit:
+[1077]        :                                       ; ------------<end>-------------
+[1078]        :                                       
+[1079]        :                                       displayLevel_03 ENDP
+[1080]        :                                       
+[1081]        :                                       ; ======================
+[1082]        :                                       ;      Level_04
+[1083]        :                                       ; ======================
+[1084]    0ECD:                                       displayLevel_04 PROC
+[1085]    0ECD: B4 02 B2 0A CD 21 B2 0D CD 21         newLine
+[1086]        :                                       
+[1087]    0ED7:                                       show_min_10_place_4:
+[1088]    0ED7: 8A 16 08 00                           mov dl,min_10_place
+[1089]        :                                       
+[1090]    0EDB: 80 FA 00                              cmp dl,0
+[1091]    0EDE: 74 2D                                 je .jump_render_min_10_place_0_4
+[1092]    0EE0: 80 FA 01                              cmp dl,1
+[1093]    0EE3: 74 34                                 je .jump_render_min_10_place_1_4
+[1094]    0EE5: 80 FA 02                              cmp dl,2
+[1095]    0EE8: 74 3B                                 je .jump_render_min_10_place_2_4
+[1096]    0EEA: 80 FA 03                              cmp dl,3
+[1097]    0EED: 74 42                                 je .jump_render_min_10_place_3_4
+[1098]    0EEF: 80 FA 04                              cmp dl,4
+[1099]    0EF2: 74 49                                 je .jump_render_min_10_place_4_4
+[1100]    0EF4: 80 FA 05                              cmp dl,5
+[1101]    0EF7: 74 50                                 je .jump_render_min_10_place_5_4
+[1102]    0EF9: 80 FA 06                              cmp dl,6
+[1103]    0EFC: 74 57                                 je .jump_render_min_10_place_6_4
+[1104]    0EFE: 80 FA 07                              cmp dl,7
+[1105]    0F01: 74 5E                                 je .jump_render_min_10_place_7_4
+[1106]    0F03: 80 FA 08                              cmp dl,8
+[1107]    0F06: 74 65                                 je .jump_render_min_10_place_8_4
+[1108]    0F08: 80 FA 09                              cmp dl,9
+[1109]    0F0B: 74 6C                                 je .jump_render_min_10_place_9_4
+[1110]        :                                       
+[1111]    0F0D:                                       .jump_render_min_10_place_0_4:
+[1112]    0F0D: B4 09 BA BC 03 CD 21                  print _0_4
+[1113]    0F14: EB 6F                                 jmp show_min_1_place_4
+[1114]    0F16: E9 85 07                              jmp exit:
+[1115]    0F19:                                       .jump_render_min_10_place_1_4:
+[1116]    0F19: B4 09 BA E4 03 CD 21                  print _1_4
+[1117]    0F20: EB 63                                 jmp show_min_1_place_4
+[1118]    0F22: E9 79 07                              jmp exit:
+[1119]    0F25:                                       .jump_render_min_10_place_2_4:
+[1120]    0F25: B4 09 BA 0C 04 CD 21                  print _2_4
+[1121]    0F2C: EB 57                                 jmp show_min_1_place_4
+[1122]    0F2E: E9 6D 07                              jmp exit:
+[1123]    0F31:                                       .jump_render_min_10_place_3_4:
+[1124]    0F31: B4 09 BA 34 04 CD 21                  print _3_4
+[1125]    0F38: EB 4B                                 jmp show_min_1_place_4
+[1126]    0F3A: E9 61 07                              jmp exit:
+[1127]    0F3D:                                       .jump_render_min_10_place_4_4:
+[1128]    0F3D: B4 09 BA 5C 04 CD 21                  print _4_4
+[1129]    0F44: EB 3F                                 jmp show_min_1_place_4
+[1130]    0F46: E9 55 07                              jmp exit:
+[1131]    0F49:                                       .jump_render_min_10_place_5_4:
+[1132]    0F49: B4 09 BA 84 04 CD 21                  print _5_4
+[1133]    0F50: EB 33                                 jmp show_min_1_place_4
+[1134]    0F52: E9 49 07                              jmp exit:
+[1135]    0F55:                                       .jump_render_min_10_place_6_4:
+[1136]    0F55: B4 09 BA AC 04 CD 21                  print _6_4
+[1137]    0F5C: EB 27                                 jmp show_min_1_place_4
+[1138]    0F5E: E9 3D 07                              jmp exit:
+[1139]    0F61:                                       .jump_render_min_10_place_7_4:
+[1140]    0F61: B4 09 BA D4 04 CD 21                  print _7_4
+[1141]    0F68: EB 1B                                 jmp show_min_1_place_4
+[1142]    0F6A: E9 31 07                              jmp exit:
+[1143]    0F6D:                                       .jump_render_min_10_place_8_4:
+[1144]    0F6D: B4 09 BA FC 04 CD 21                  print _8_4
+[1145]    0F74: EB 0F                                 jmp show_min_1_place_4
+[1146]    0F76: E9 25 07                              jmp exit:
+[1147]    0F79:                                       .jump_render_min_10_place_9_4:
+[1148]    0F79: B4 09 BA 24 05 CD 21                  print _9_4
+[1149]    0F80: EB 03                                 jmp show_min_1_place_4
+[1150]    0F82: E9 19 07                              jmp exit:
+[1151]        :                                       ; ------------<end>-------------
+[1152]        :                                       
+[1153]    0F85:                                       show_min_1_place_4:
+[1154]    0F85: 8A 16 07 00                           mov dl,min_1_place
+[1155]        :                                       
+[1156]    0F89: 80 FA 00                              cmp dl,0
+[1157]    0F8C: 74 2D                                 je .jump_render_min_1_place_0_4
+[1158]    0F8E: 80 FA 01                              cmp dl,1
+[1159]    0F91: 74 34                                 je .jump_render_min_1_place_1_4
+[1160]    0F93: 80 FA 02                              cmp dl,2
+[1161]    0F96: 74 3B                                 je .jump_render_min_1_place_2_4
+[1162]    0F98: 80 FA 03                              cmp dl,3
+[1163]    0F9B: 74 42                                 je .jump_render_min_1_place_3_4
+[1164]    0F9D: 80 FA 04                              cmp dl,4
+[1165]    0FA0: 74 49                                 je .jump_render_min_1_place_4_4
+[1166]    0FA2: 80 FA 05                              cmp dl,5
+[1167]    0FA5: 74 50                                 je .jump_render_min_1_place_5_4
+[1168]    0FA7: 80 FA 06                              cmp dl,6
+[1169]    0FAA: 74 57                                 je .jump_render_min_1_place_6_4
+[1170]    0FAC: 80 FA 07                              cmp dl,7
+[1171]    0FAF: 74 5E                                 je .jump_render_min_1_place_7_4
+[1172]    0FB1: 80 FA 08                              cmp dl,8
+[1173]    0FB4: 74 65                                 je .jump_render_min_1_place_8_4
+[1174]    0FB6: 80 FA 09                              cmp dl,9
+[1175]    0FB9: 74 6C                                 je .jump_render_min_1_place_9_4
+[1176]        :                                       
+[1177]    0FBB:                                       .jump_render_min_1_place_0_4:
+[1178]    0FBB: B4 09 BA BC 03 CD 21                  print _0_4
+[1179]    0FC2: EB 6F                                 jmp show_colon_4
+[1180]    0FC4: E9 D7 06                              jmp exit:
+[1181]    0FC7:                                       .jump_render_min_1_place_1_4:
+[1182]    0FC7: B4 09 BA E4 03 CD 21                  print _1_4
+[1183]    0FCE: EB 63                                 jmp show_colon_4
+[1184]    0FD0: E9 CB 06                              jmp exit:
+[1185]    0FD3:                                       .jump_render_min_1_place_2_4:
+[1186]    0FD3: B4 09 BA 0C 04 CD 21                  print _2_4
+[1187]    0FDA: EB 57                                 jmp show_colon_4
+[1188]    0FDC: E9 BF 06                              jmp exit:
+[1189]    0FDF:                                       .jump_render_min_1_place_3_4:
+[1190]    0FDF: B4 09 BA 34 04 CD 21                  print _3_4
+[1191]    0FE6: EB 4B                                 jmp show_colon_4
+[1192]    0FE8: E9 B3 06                              jmp exit:
+[1193]    0FEB:                                       .jump_render_min_1_place_4_4:
+[1194]    0FEB: B4 09 BA 5C 04 CD 21                  print _4_4
+[1195]    0FF2: EB 3F                                 jmp show_colon_4
+[1196]    0FF4: E9 A7 06                              jmp exit:
+[1197]    0FF7:                                       .jump_render_min_1_place_5_4:
+[1198]    0FF7: B4 09 BA 84 04 CD 21                  print _5_4
+[1199]    0FFE: EB 33                                 jmp show_colon_4
+[1200]    1000: E9 9B 06                              jmp exit:
+[1201]    1003:                                       .jump_render_min_1_place_6_4:
+[1202]    1003: B4 09 BA AC 04 CD 21                  print _6_4
+[1203]    100A: EB 27                                 jmp show_colon_4
+[1204]    100C: E9 8F 06                              jmp exit:
+[1205]    100F:                                       .jump_render_min_1_place_7_4:
+[1206]    100F: B4 09 BA D4 04 CD 21                  print _7_4
+[1207]    1016: EB 1B                                 jmp show_colon_4
+[1208]    1018: E9 83 06                              jmp exit:
+[1209]    101B:                                       .jump_render_min_1_place_8_4:
+[1210]    101B: B4 09 BA FC 04 CD 21                  print _8_4
+[1211]    1022: EB 0F                                 jmp show_colon_4
+[1212]    1024: E9 77 06                              jmp exit:
+[1213]    1027:                                       .jump_render_min_1_place_9_4:
+[1214]    1027: B4 09 BA 24 05 CD 21                  print _9_4
+[1215]    102E: EB 03                                 jmp show_colon_4
+[1216]    1030: E9 6B 06                              jmp exit:
+[1217]        :                                       ; ------------<end>-------------
+[1218]        :                                       
+[1219]    1033:                                       show_colon_4:
+[1220]    1033: B4 09 BA 40 05 CD 21                  print _x_4
+[1221]    103A: EB 00                                 jmp show_sec_10_place_4
+[1222]        :                                       ; ------------<end>-------------
+[1223]        :                                       
+[1224]    103C:                                       show_sec_10_place_4:
+[1225]    103C: 8A 16 06 00                           mov dl,sec_10_place
+[1226]        :                                       
+[1227]    1040: 80 FA 00                              cmp dl,0
+[1228]    1043: 74 2D                                 je .jump_render_sec_10_place_0_4
+[1229]    1045: 80 FA 01                              cmp dl,1
+[1230]    1048: 74 34                                 je .jump_render_sec_10_place_1_4
+[1231]    104A: 80 FA 02                              cmp dl,2
+[1232]    104D: 74 3B                                 je .jump_render_sec_10_place_2_4
+[1233]    104F: 80 FA 03                              cmp dl,3
+[1234]    1052: 74 42                                 je .jump_render_sec_10_place_3_4
+[1235]    1054: 80 FA 04                              cmp dl,4
+[1236]    1057: 74 49                                 je .jump_render_sec_10_place_4_4
+[1237]    1059: 80 FA 05                              cmp dl,5
+[1238]    105C: 74 50                                 je .jump_render_sec_10_place_5_4
+[1239]    105E: 80 FA 06                              cmp dl,6
+[1240]    1061: 74 57                                 je .jump_render_sec_10_place_6_4
+[1241]    1063: 80 FA 07                              cmp dl,7
+[1242]    1066: 74 5E                                 je .jump_render_sec_10_place_7_4
+[1243]    1068: 80 FA 08                              cmp dl,8
+[1244]    106B: 74 65                                 je .jump_render_sec_10_place_8_4
+[1245]    106D: 80 FA 09                              cmp dl,9
+[1246]    1070: 74 6C                                 je .jump_render_sec_10_place_9_4
+[1247]        :                                       
+[1248]    1072:                                       .jump_render_sec_10_place_0_4:
+[1249]    1072: B4 09 BA BC 03 CD 21                  print _0_4
+[1250]    1079: EB 6F                                 jmp show_sec_1_place_4
+[1251]    107B: E9 20 06                              jmp exit:
+[1252]    107E:                                       .jump_render_sec_10_place_1_4:
+[1253]    107E: B4 09 BA E4 03 CD 21                  print _1_4
+[1254]    1085: EB 63                                 jmp show_sec_1_place_4
+[1255]    1087: E9 14 06                              jmp exit:
+[1256]    108A:                                       .jump_render_sec_10_place_2_4:
+[1257]    108A: B4 09 BA 0C 04 CD 21                  print _2_4
+[1258]    1091: EB 57                                 jmp show_sec_1_place_4
+[1259]    1093: E9 08 06                              jmp exit:
+[1260]    1096:                                       .jump_render_sec_10_place_3_4:
+[1261]    1096: B4 09 BA 34 04 CD 21                  print _3_4
+[1262]    109D: EB 4B                                 jmp show_sec_1_place_4
+[1263]    109F: E9 FC 05                              jmp exit:
+[1264]    10A2:                                       .jump_render_sec_10_place_4_4:
+[1265]    10A2: B4 09 BA 5C 04 CD 21                  print _4_4
+[1266]    10A9: EB 3F                                 jmp show_sec_1_place_4
+[1267]    10AB: E9 F0 05                              jmp exit:
+[1268]    10AE:                                       .jump_render_sec_10_place_5_4:
+[1269]    10AE: B4 09 BA 84 04 CD 21                  print _5_4
+[1270]    10B5: EB 33                                 jmp show_sec_1_place_4
+[1271]    10B7: E9 E4 05                              jmp exit:
+[1272]    10BA:                                       .jump_render_sec_10_place_6_4:
+[1273]    10BA: B4 09 BA AC 04 CD 21                  print _6_4
+[1274]    10C1: EB 27                                 jmp show_sec_1_place_4
+[1275]    10C3: E9 D8 05                              jmp exit:
+[1276]    10C6:                                       .jump_render_sec_10_place_7_4:
+[1277]    10C6: B4 09 BA D4 04 CD 21                  print _7_4
+[1278]    10CD: EB 1B                                 jmp show_sec_1_place_4
+[1279]    10CF: E9 CC 05                              jmp exit:
+[1280]    10D2:                                       .jump_render_sec_10_place_8_4:
+[1281]    10D2: B4 09 BA FC 04 CD 21                  print _8_4
+[1282]    10D9: EB 0F                                 jmp show_sec_1_place_4
+[1283]    10DB: E9 C0 05                              jmp exit:
+[1284]    10DE:                                       .jump_render_sec_10_place_9_4:
+[1285]    10DE: B4 09 BA 24 05 CD 21                  print _9_4
+[1286]    10E5: EB 03                                 jmp show_sec_1_place_4
+[1287]    10E7: E9 B4 05                              jmp exit:
+[1288]        :                                       ; ------------<end>-------------
+[1289]        :                                       
+[1290]    10EA:                                       show_sec_1_place_4:
+[1291]    10EA: 8A 16 05 00                           mov dl,sec_1_place
+[1292]        :                                       
+[1293]    10EE: 80 FA 00                              cmp dl,0
+[1294]    10F1: 74 2D                                 je .jump_render_sec_1_place_0_4
+[1295]    10F3: 80 FA 01                              cmp dl,1
+[1296]    10F6: 74 35                                 je .jump_render_sec_1_place_1_4
+[1297]    10F8: 80 FA 02                              cmp dl,2
+[1298]    10FB: 74 3D                                 je .jump_render_sec_1_place_2_4
+[1299]    10FD: 80 FA 03                              cmp dl,3
+[1300]    1100: 74 45                                 je .jump_render_sec_1_place_3_4
+[1301]    1102: 80 FA 04                              cmp dl,4
+[1302]    1105: 74 4D                                 je .jump_render_sec_1_place_4_4
+[1303]    1107: 80 FA 05                              cmp dl,5
+[1304]    110A: 74 55                                 je .jump_render_sec_1_place_5_4
+[1305]    110C: 80 FA 06                              cmp dl,6
+[1306]    110F: 74 5D                                 je .jump_render_sec_1_place_6_4
+[1307]    1111: 80 FA 07                              cmp dl,7
+[1308]    1114: 74 65                                 je .jump_render_sec_1_place_7_4
+[1309]    1116: 80 FA 08                              cmp dl,8
+[1310]    1119: 74 6D                                 je .jump_render_sec_1_place_8_4
+[1311]    111B: 80 FA 09                              cmp dl,9
+[1312]    111E: 74 75                                 je .jump_render_sec_1_place_9_4
+[1313]        :                                       
+[1314]    1120:                                       .jump_render_sec_1_place_0_4:
+[1315]    1120: B4 09 BA BC 03 CD 21                  print _0_4
+[1316]    1127: E8 78 00                              call displayLevel_05
+[1317]    112A: E9 71 05                              jmp exit:
+[1318]    112D:                                       .jump_render_sec_1_place_1_4:
+[1319]    112D: B4 09 BA E4 03 CD 21                  print _1_4
+[1320]    1134: E8 6B 00                              call displayLevel_05
+[1321]    1137: E9 64 05                              jmp exit:
+[1322]    113A:                                       .jump_render_sec_1_place_2_4:
+[1323]    113A: B4 09 BA 0C 04 CD 21                  print _2_4
+[1324]    1141: E8 5E 00                              call displayLevel_05
+[1325]    1144: E9 57 05                              jmp exit:
+[1326]    1147:                                       .jump_render_sec_1_place_3_4:
+[1327]    1147: B4 09 BA 34 04 CD 21                  print _3_4
+[1328]    114E: E8 51 00                              call displayLevel_05
+[1329]    1151: E9 4A 05                              jmp exit:
+[1330]    1154:                                       .jump_render_sec_1_place_4_4:
+[1331]    1154: B4 09 BA 5C 04 CD 21                  print _4_4
+[1332]    115B: E8 44 00                              call displayLevel_05
+[1333]    115E: E9 3D 05                              jmp exit:
+[1334]    1161:                                       .jump_render_sec_1_place_5_4:
+[1335]    1161: B4 09 BA 84 04 CD 21                  print _5_4
+[1336]    1168: E8 37 00                              call displayLevel_05
+[1337]    116B: E9 30 05                              jmp exit:
+[1338]    116E:                                       .jump_render_sec_1_place_6_4:
+[1339]    116E: B4 09 BA AC 04 CD 21                  print _6_4
+[1340]    1175: E8 2A 00                              call displayLevel_05
+[1341]    1178: E9 23 05                              jmp exit:
+[1342]    117B:                                       .jump_render_sec_1_place_7_4:
+[1343]    117B: B4 09 BA D4 04 CD 21                  print _7_4
+[1344]    1182: E8 1D 00                              call displayLevel_05
+[1345]    1185: E9 16 05                              jmp exit:
+[1346]    1188:                                       .jump_render_sec_1_place_8_4:
+[1347]    1188: B4 09 BA FC 04 CD 21                  print _8_4
+[1348]    118F: E8 10 00                              call displayLevel_05
+[1349]    1192: E9 09 05                              jmp exit:
+[1350]    1195:                                       .jump_render_sec_1_place_9_4:
+[1351]    1195: B4 09 BA 24 05 CD 21                  print _9_4
+[1352]    119C: E8 03 00                              call displayLevel_05
+[1353]    119F: E9 FC 04                              jmp exit:
+[1354]        :                                       ; ------------<end>-------------
+[1355]        :                                       
+[1356]        :                                       displayLevel_04 ENDP
+[1357]        :                                       
+[1358]        :                                       ; ======================
+[1359]        :                                       ;      Level_05
+[1360]        :                                       ; ======================
+[1361]    11A2:                                       displayLevel_05 PROC
+[1362]    11A2: B4 02 B2 0A CD 21 B2 0D CD 21         newLine
+[1363]        :                                       
+[1364]    11AC:                                       show_min_10_place_5:
+[1365]    11AC: 8A 16 08 00                           mov dl,min_10_place
+[1366]        :                                       
+[1367]    11B0: 80 FA 00                              cmp dl,0
+[1368]    11B3: 74 2D                                 je .jump_render_min_10_place_0_5
+[1369]    11B5: 80 FA 01                              cmp dl,1
+[1370]    11B8: 74 34                                 je .jump_render_min_10_place_1_5
+[1371]    11BA: 80 FA 02                              cmp dl,2
+[1372]    11BD: 74 3B                                 je .jump_render_min_10_place_2_5
+[1373]    11BF: 80 FA 03                              cmp dl,3
+[1374]    11C2: 74 42                                 je .jump_render_min_10_place_3_5
+[1375]    11C4: 80 FA 04                              cmp dl,4
+[1376]    11C7: 74 49                                 je .jump_render_min_10_place_4_5
+[1377]    11C9: 80 FA 05                              cmp dl,5
+[1378]    11CC: 74 50                                 je .jump_render_min_10_place_5_5
+[1379]    11CE: 80 FA 06                              cmp dl,6
+[1380]    11D1: 74 57                                 je .jump_render_min_10_place_6_5
+[1381]    11D3: 80 FA 07                              cmp dl,7
+[1382]    11D6: 74 5E                                 je .jump_render_min_10_place_7_5
+[1383]    11D8: 80 FA 08                              cmp dl,8
+[1384]    11DB: 74 65                                 je .jump_render_min_10_place_8_5
+[1385]    11DD: 80 FA 09                              cmp dl,9
+[1386]    11E0: 74 6C                                 je .jump_render_min_10_place_9_5
+[1387]        :                                       
+[1388]    11E2:                                       .jump_render_min_10_place_0_5:
+[1389]    11E2: B4 09 BA C4 03 CD 21                  print _0_5
+[1390]    11E9: EB 6F                                 jmp show_min_1_place_5
+[1391]    11EB: E9 B0 04                              jmp exit:
+[1392]    11EE:                                       .jump_render_min_10_place_1_5:
+[1393]    11EE: B4 09 BA EC 03 CD 21                  print _1_5
+[1394]    11F5: EB 63                                 jmp show_min_1_place_5
+[1395]    11F7: E9 A4 04                              jmp exit:
+[1396]    11FA:                                       .jump_render_min_10_place_2_5:
+[1397]    11FA: B4 09 BA 14 04 CD 21                  print _2_5
+[1398]    1201: EB 57                                 jmp show_min_1_place_5
+[1399]    1203: E9 98 04                              jmp exit:
+[1400]    1206:                                       .jump_render_min_10_place_3_5:
+[1401]    1206: B4 09 BA 3C 04 CD 21                  print _3_5
+[1402]    120D: EB 4B                                 jmp show_min_1_place_5
+[1403]    120F: E9 8C 04                              jmp exit:
+[1404]    1212:                                       .jump_render_min_10_place_4_5:
+[1405]    1212: B4 09 BA 64 04 CD 21                  print _4_5
+[1406]    1219: EB 3F                                 jmp show_min_1_place_5
+[1407]    121B: E9 80 04                              jmp exit:
+[1408]    121E:                                       .jump_render_min_10_place_5_5:
+[1409]    121E: B4 09 BA 8C 04 CD 21                  print _5_5
+[1410]    1225: EB 33                                 jmp show_min_1_place_5
+[1411]    1227: E9 74 04                              jmp exit:
+[1412]    122A:                                       .jump_render_min_10_place_6_5:
+[1413]    122A: B4 09 BA B4 04 CD 21                  print _6_5
+[1414]    1231: EB 27                                 jmp show_min_1_place_5
+[1415]    1233: E9 68 04                              jmp exit:
+[1416]    1236:                                       .jump_render_min_10_place_7_5:
+[1417]    1236: B4 09 BA DC 04 CD 21                  print _7_5
+[1418]    123D: EB 1B                                 jmp show_min_1_place_5
+[1419]    123F: E9 5C 04                              jmp exit:
+[1420]    1242:                                       .jump_render_min_10_place_8_5:
+[1421]    1242: B4 09 BA 04 05 CD 21                  print _8_5
+[1422]    1249: EB 0F                                 jmp show_min_1_place_5
+[1423]    124B: E9 50 04                              jmp exit:
+[1424]    124E:                                       .jump_render_min_10_place_9_5:
+[1425]    124E: B4 09 BA 2C 05 CD 21                  print _9_5
+[1426]    1255: EB 03                                 jmp show_min_1_place_5
+[1427]    1257: E9 44 04                              jmp exit:
+[1428]        :                                       ; ------------<end>-------------
+[1429]        :                                       
+[1430]    125A:                                       show_min_1_place_5:
+[1431]    125A: 8A 16 07 00                           mov dl,min_1_place
+[1432]        :                                       
+[1433]    125E: 80 FA 00                              cmp dl,0
+[1434]    1261: 74 2D                                 je .jump_render_min_1_place_0_5
+[1435]    1263: 80 FA 01                              cmp dl,1
+[1436]    1266: 74 34                                 je .jump_render_min_1_place_1_5
+[1437]    1268: 80 FA 02                              cmp dl,2
+[1438]    126B: 74 3B                                 je .jump_render_min_1_place_2_5
+[1439]    126D: 80 FA 03                              cmp dl,3
+[1440]    1270: 74 42                                 je .jump_render_min_1_place_3_5
+[1441]    1272: 80 FA 04                              cmp dl,4
+[1442]    1275: 74 49                                 je .jump_render_min_1_place_4_5
+[1443]    1277: 80 FA 05                              cmp dl,5
+[1444]    127A: 74 50                                 je .jump_render_min_1_place_5_5
+[1445]    127C: 80 FA 06                              cmp dl,6
+[1446]    127F: 74 57                                 je .jump_render_min_1_place_6_5
+[1447]    1281: 80 FA 07                              cmp dl,7
+[1448]    1284: 74 5E                                 je .jump_render_min_1_place_7_5
+[1449]    1286: 80 FA 08                              cmp dl,8
+[1450]    1289: 74 65                                 je .jump_render_min_1_place_8_5
+[1451]    128B: 80 FA 09                              cmp dl,9
+[1452]    128E: 74 6C                                 je .jump_render_min_1_place_9_5
+[1453]        :                                       
+[1454]    1290:                                       .jump_render_min_1_place_0_5:
+[1455]    1290: B4 09 BA C4 03 CD 21                  print _0_5
+[1456]    1297: EB 6F                                 jmp show_colon_5
+[1457]    1299: E9 02 04                              jmp exit:
+[1458]    129C:                                       .jump_render_min_1_place_1_5:
+[1459]    129C: B4 09 BA EC 03 CD 21                  print _1_5
+[1460]    12A3: EB 63                                 jmp show_colon_5
+[1461]    12A5: E9 F6 03                              jmp exit:
+[1462]    12A8:                                       .jump_render_min_1_place_2_5:
+[1463]    12A8: B4 09 BA 14 04 CD 21                  print _2_5
+[1464]    12AF: EB 57                                 jmp show_colon_5
+[1465]    12B1: E9 EA 03                              jmp exit:
+[1466]    12B4:                                       .jump_render_min_1_place_3_5:
+[1467]    12B4: B4 09 BA 3C 04 CD 21                  print _3_5
+[1468]    12BB: EB 4B                                 jmp show_colon_5
+[1469]    12BD: E9 DE 03                              jmp exit:
+[1470]    12C0:                                       .jump_render_min_1_place_4_5:
+[1471]    12C0: B4 09 BA 64 04 CD 21                  print _4_5
+[1472]    12C7: EB 3F                                 jmp show_colon_5
+[1473]    12C9: E9 D2 03                              jmp exit:
+[1474]    12CC:                                       .jump_render_min_1_place_5_5:
+[1475]    12CC: B4 09 BA 8C 04 CD 21                  print _5_5
+[1476]    12D3: EB 33                                 jmp show_colon_5
+[1477]    12D5: E9 C6 03                              jmp exit:
+[1478]    12D8:                                       .jump_render_min_1_place_6_5:
+[1479]    12D8: B4 09 BA B4 04 CD 21                  print _6_5
+[1480]    12DF: EB 27                                 jmp show_colon_5
+[1481]    12E1: E9 BA 03                              jmp exit:
+[1482]    12E4:                                       .jump_render_min_1_place_7_5:
+[1483]    12E4: B4 09 BA DC 04 CD 21                  print _7_5
+[1484]    12EB: EB 1B                                 jmp show_colon_5
+[1485]    12ED: E9 AE 03                              jmp exit:
+[1486]    12F0:                                       .jump_render_min_1_place_8_5:
+[1487]    12F0: B4 09 BA 04 05 CD 21                  print _8_5
+[1488]    12F7: EB 0F                                 jmp show_colon_5
+[1489]    12F9: E9 A2 03                              jmp exit:
+[1490]    12FC:                                       .jump_render_min_1_place_9_5:
+[1491]    12FC: B4 09 BA 2C 05 CD 21                  print _9_5
+[1492]    1303: EB 03                                 jmp show_colon_5
+[1493]    1305: E9 96 03                              jmp exit:
+[1494]        :                                       ; ------------<end>-------------
+[1495]        :                                       
+[1496]    1308:                                       show_colon_5:
+[1497]    1308: B4 09 BA 44 05 CD 21                  print _x_5
+[1498]    130F: EB 00                                 jmp show_sec_10_place_5
+[1499]        :                                       ; ------------<end>-------------
+[1500]        :                                       
+[1501]    1311:                                       show_sec_10_place_5:
+[1502]    1311: 8A 16 06 00                           mov dl,sec_10_place
+[1503]        :                                       
+[1504]    1315: 80 FA 00                              cmp dl,0
+[1505]    1318: 74 2D                                 je .jump_render_sec_10_place_0_5
+[1506]    131A: 80 FA 01                              cmp dl,1
+[1507]    131D: 74 34                                 je .jump_render_sec_10_place_1_5
+[1508]    131F: 80 FA 02                              cmp dl,2
+[1509]    1322: 74 3B                                 je .jump_render_sec_10_place_2_5
+[1510]    1324: 80 FA 03                              cmp dl,3
+[1511]    1327: 74 42                                 je .jump_render_sec_10_place_3_5
+[1512]    1329: 80 FA 04                              cmp dl,4
+[1513]    132C: 74 49                                 je .jump_render_sec_10_place_4_5
+[1514]    132E: 80 FA 05                              cmp dl,5
+[1515]    1331: 74 50                                 je .jump_render_sec_10_place_5_5
+[1516]    1333: 80 FA 06                              cmp dl,6
+[1517]    1336: 74 57                                 je .jump_render_sec_10_place_6_5
+[1518]    1338: 80 FA 07                              cmp dl,7
+[1519]    133B: 74 5E                                 je .jump_render_sec_10_place_7_5
+[1520]    133D: 80 FA 08                              cmp dl,8
+[1521]    1340: 74 65                                 je .jump_render_sec_10_place_8_5
+[1522]    1342: 80 FA 09                              cmp dl,9
+[1523]    1345: 74 6C                                 je .jump_render_sec_10_place_9_5
+[1524]        :                                       
+[1525]    1347:                                       .jump_render_sec_10_place_0_5:
+[1526]    1347: B4 09 BA C4 03 CD 21                  print _0_5
+[1527]    134E: EB 6F                                 jmp show_sec_1_place_5
+[1528]    1350: E9 4B 03                              jmp exit:
+[1529]    1353:                                       .jump_render_sec_10_place_1_5:
+[1530]    1353: B4 09 BA EC 03 CD 21                  print _1_5
+[1531]    135A: EB 63                                 jmp show_sec_1_place_5
+[1532]    135C: E9 3F 03                              jmp exit:
+[1533]    135F:                                       .jump_render_sec_10_place_2_5:
+[1534]    135F: B4 09 BA 14 04 CD 21                  print _2_5
+[1535]    1366: EB 57                                 jmp show_sec_1_place_5
+[1536]    1368: E9 33 03                              jmp exit:
+[1537]    136B:                                       .jump_render_sec_10_place_3_5:
+[1538]    136B: B4 09 BA 3C 04 CD 21                  print _3_5
+[1539]    1372: EB 4B                                 jmp show_sec_1_place_5
+[1540]    1374: E9 27 03                              jmp exit:
+[1541]    1377:                                       .jump_render_sec_10_place_4_5:
+[1542]    1377: B4 09 BA 64 04 CD 21                  print _4_5
+[1543]    137E: EB 3F                                 jmp show_sec_1_place_5
+[1544]    1380: E9 1B 03                              jmp exit:
+[1545]    1383:                                       .jump_render_sec_10_place_5_5:
+[1546]    1383: B4 09 BA 8C 04 CD 21                  print _5_5
+[1547]    138A: EB 33                                 jmp show_sec_1_place_5
+[1548]    138C: E9 0F 03                              jmp exit:
+[1549]    138F:                                       .jump_render_sec_10_place_6_5:
+[1550]    138F: B4 09 BA B4 04 CD 21                  print _6_5
+[1551]    1396: EB 27                                 jmp show_sec_1_place_5
+[1552]    1398: E9 03 03                              jmp exit:
+[1553]    139B:                                       .jump_render_sec_10_place_7_5:
+[1554]    139B: B4 09 BA DC 04 CD 21                  print _7_5
+[1555]    13A2: EB 1B                                 jmp show_sec_1_place_5
+[1556]    13A4: E9 F7 02                              jmp exit:
+[1557]    13A7:                                       .jump_render_sec_10_place_8_5:
+[1558]    13A7: B4 09 BA 04 05 CD 21                  print _8_5
+[1559]    13AE: EB 0F                                 jmp show_sec_1_place_5
+[1560]    13B0: E9 EB 02                              jmp exit:
+[1561]    13B3:                                       .jump_render_sec_10_place_9_5:
+[1562]    13B3: B4 09 BA 2C 05 CD 21                  print _9_5
+[1563]    13BA: EB 03                                 jmp show_sec_1_place_5
+[1564]    13BC: E9 DF 02                              jmp exit:
+[1565]        :                                       ; ------------<end>-------------
+[1566]        :                                       
+[1567]    13BF:                                       show_sec_1_place_5:
+[1568]    13BF: 8A 16 05 00                           mov dl,sec_1_place
+[1569]        :                                       
+[1570]    13C3: 80 FA 00                              cmp dl,0
+[1571]    13C6: 74 2D                                 je .jump_render_sec_1_place_0_5
+[1572]    13C8: 80 FA 01                              cmp dl,1
+[1573]    13CB: 74 35                                 je .jump_render_sec_1_place_1_5
+[1574]    13CD: 80 FA 02                              cmp dl,2
+[1575]    13D0: 74 3D                                 je .jump_render_sec_1_place_2_5
+[1576]    13D2: 80 FA 03                              cmp dl,3
+[1577]    13D5: 74 45                                 je .jump_render_sec_1_place_3_5
+[1578]    13D7: 80 FA 04                              cmp dl,4
+[1579]    13DA: 74 4D                                 je .jump_render_sec_1_place_4_5
+[1580]    13DC: 80 FA 05                              cmp dl,5
+[1581]    13DF: 74 55                                 je .jump_render_sec_1_place_5_5
+[1582]    13E1: 80 FA 06                              cmp dl,6
+[1583]    13E4: 74 5D                                 je .jump_render_sec_1_place_6_5
+[1584]    13E6: 80 FA 07                              cmp dl,7
+[1585]    13E9: 74 65                                 je .jump_render_sec_1_place_7_5
+[1586]    13EB: 80 FA 08                              cmp dl,8
+[1587]    13EE: 74 6D                                 je .jump_render_sec_1_place_8_5
+[1588]    13F0: 80 FA 09                              cmp dl,9
+[1589]    13F3: 74 75                                 je .jump_render_sec_1_place_9_5
+[1590]        :                                       
+[1591]    13F5:                                       .jump_render_sec_1_place_0_5:
+[1592]    13F5: B4 09 BA C4 03 CD 21                  print _0_5
+[1593]    13FC: E8 78 00                              call serviceDecider
+[1594]    13FF: E9 9C 02                              jmp exit:
+[1595]    1402:                                       .jump_render_sec_1_place_1_5:
+[1596]    1402: B4 09 BA EC 03 CD 21                  print _1_5
+[1597]    1409: E8 6B 00                              call serviceDecider
+[1598]    140C: E9 8F 02                              jmp exit:
+[1599]    140F:                                       .jump_render_sec_1_place_2_5:
+[1600]    140F: B4 09 BA 14 04 CD 21                  print _2_5
+[1601]    1416: E8 5E 00                              call serviceDecider
+[1602]    1419: E9 82 02                              jmp exit:
+[1603]    141C:                                       .jump_render_sec_1_place_3_5:
+[1604]    141C: B4 09 BA 3C 04 CD 21                  print _3_5
+[1605]    1423: E8 51 00                              call serviceDecider
+[1606]    1426: E9 75 02                              jmp exit:
+[1607]    1429:                                       .jump_render_sec_1_place_4_5:
+[1608]    1429: B4 09 BA 64 04 CD 21                  print _4_5
+[1609]    1430: E8 44 00                              call serviceDecider
+[1610]    1433: E9 68 02                              jmp exit:
+[1611]    1436:                                       .jump_render_sec_1_place_5_5:
+[1612]    1436: B4 09 BA 8C 04 CD 21                  print _5_5
+[1613]    143D: E8 37 00                              call serviceDecider
+[1614]    1440: E9 5B 02                              jmp exit:
+[1615]    1443:                                       .jump_render_sec_1_place_6_5:
+[1616]    1443: B4 09 BA B4 04 CD 21                  print _6_5
+[1617]    144A: E8 2A 00                              call serviceDecider
+[1618]    144D: E9 4E 02                              jmp exit:
+[1619]    1450:                                       .jump_render_sec_1_place_7_5:
+[1620]    1450: B4 09 BA DC 04 CD 21                  print _7_5
+[1621]    1457: E8 1D 00                              call serviceDecider
+[1622]    145A: E9 41 02                              jmp exit:
+[1623]    145D:                                       .jump_render_sec_1_place_8_5:
+[1624]    145D: B4 09 BA 04 05 CD 21                  print _8_5
+[1625]    1464: E8 10 00                              call serviceDecider
+[1626]    1467: E9 34 02                              jmp exit:
+[1627]    146A:                                       .jump_render_sec_1_place_9_5:
+[1628]    146A: B4 09 BA 2C 05 CD 21                  print _9_5
+[1629]    1471: E8 03 00                              call serviceDecider
+[1630]    1474: E9 27 02                              jmp exit:
+[1631]        :                                       ; ------------<end>-------------
+[1632]        :                                       
+[1633]        :                                       displayLevel_05 ENDP
+[1634]        :                                       
+[1635]    1477:                                       serviceDecider PROC
+[1636]    1477: 8A 16 09 00                           mov dl,service
+[1637]    147B: 80 FA 02                              cmp dl,2
+[1638]    147E: 74 0A                                 je serviceStopWatchLoop
+[1639]    1480: 7C 02                                 jl serviceTimerLoop
+[1640]    1482: 7F 0C                                 jg serviceClockClose
+[1641]        :                                       
+[1642]    1484:                                       serviceTimerLoop:
+[1643]    1484: E8 0C 00                              call loopTimer
+[1644]    1487: E9 14 02                              jmp exit:
+[1645]        :                                       
+[1646]    148A:                                       serviceStopWatchLoop:
+[1647]    148A: E8 C6 00                              call startStopwatch
+[1648]    148D: E9 0E 02                              jmp exit:
+[1649]        :                                       
+[1650]    1490:                                       serviceClockClose:
+[1651]        :                                       ; ! just exit
+[1652]    1490: E9 0B 02                              jmp exit:
+[1653]        :                                       serviceDecider ENDP
+[1654]        :                                       
+[1655]    1493:                                       loopTimer PROC
+[1656]    1493: 83 3E 00 00 00                        cmp total_sec,0
+[1657]    1498: 7E 44                                 jle timesUp
+[1658]        :                                       
+[1659]    149A: B9 0F 00 BA 90 10 B4 86 CD 15         waitFor1Sec
+[1660]    14A4: 83 2E 00 00 01                        sub total_sec, 1
+[1661]    14A9: 33 C0 A1 00 00 8A 1E 04 00 F6 F3 A2   separate
+                03 00 88 26 02 00                   
+[1662]    14BB: 33 C0 A0 02 00 B3 0A F6 F3 88 26 05   setSecPlaces
+                00 A2 06 00                         
+[1663]    14CB: 33 C0 A0 03 00 B3 0A F6 F3 88 26 07   setMinPlaces
+                00 A2 08 00                         
+[1664]    14DB: E8 72 F1                              call displayTimer
+[1665]        :                                       
+[1666]    14DE:                                       timesUp:
+[1667]    14DE: B4 02 B2 07 CD 21                     beep
+[1668]    14E4: B4 02 B2 07 CD 21                     beep
+[1669]    14EA: B4 02 B2 07 CD 21                     beep
+[1670]    14F0: B4 02 B2 07 CD 21                     beep
+[1671]    14F6: B4 02 B2 07 CD 21                     beep
+[1672]    14FC: B4 02 B2 07 CD 21                     beep
+[1673]    1502: E9 99 01                              jmp exit:
+[1674]        :                                       loopTimer ENDP
+[1675]        :                                       
+[1676]        :                                       ; TODO:: Don't need this proc | Delete it
+[1677]    1505:                                       startTimer PROC
+[1678]    1505: 8B 0E 00 00                           mov cx,total_sec
+[1679]    1509:                                       loopx:
+[1680]    1509: B9 0F 00 BA 90 10 B4 86 CD 15         waitFor1Sec
+[1681]    1513: 83 2E 00 00 01                        sub total_sec, 1
+[1682]    1518: 8B 0E 00 00                           mov cx,total_sec
+[1683]    151C: 33 C0 A1 00 00 8A 1E 04 00 F6 F3 A2   separate
+                03 00 88 26 02 00                   
+[1684]    152E: 33 C0 A0 02 00 B3 0A F6 F3 88 26 05   setSecPlaces
+                00 A2 06 00                         
+[1685]    153E: 33 C0 A0 03 00 B3 0A F6 F3 88 26 07   setMinPlaces
+                00 A2 08 00                         
+[1686]        :                                       ; displayClicheTimer
+[1687]    154E: E8 FF F0                              call displayTimer
+[1688]    1551: E2 B6                                 loop loopx
+[1689]        :                                       startTimer ENDP
+[1690]        :                                       
+[1691]    1553:                                       startStopwatch PROC
+[1692]    1553: B9 0F 00 BA 90 10 B4 86 CD 15         waitFor1Sec
+[1693]    155D: 83 06 00 00 01                        add total_sec, 1
+[1694]    1562: 33 C0 A1 00 00 8A 1E 04 00 F6 F3 A2   separate
+                03 00 88 26 02 00                   
+[1695]    1574: 33 C0 A0 02 00 B3 0A F6 F3 88 26 05   setSecPlaces
+                00 A2 06 00                         
+[1696]    1584: 33 C0 A0 03 00 B3 0A F6 F3 88 26 07   setMinPlaces
+                00 A2 08 00                         
+[1697]    1594: E8 B9 F0                              call displayTimer
+[1698]        :                                       startStopwatch ENDP
+[1699]        :                                       
+[1700]        :                                       
+[1701]        :                                       
+[1702]    1597:                                       setClockTime PROC
+[1703]    1597: 33 C0                                 xor ax,ax
+[1704]    1599: B4 2C                                 mov ah,2CH          ; To get System Time
+[1705]    159B: CD 21                                 int 21h
+[1706]    159D: 88 2E 03 00                           MOV min,ch          ; Hour is in CH | Hour goes to min
+[1707]    15A1: 88 0E 02 00                           MOV sec,cl          ; Hour is in CL | Min goes to sec
+[1708]        :                                       
+[1709]        :                                       ;making 12 hour format
+[1710]    15A5: 33 C0                                 xor ax,ax
+[1711]    15A7: A0 03 00                              mov al, min
+[1712]    15AA: B3 0C                                 mov bl, 12
+[1713]    15AC: F6 F3                                 div bl
+[1714]    15AE: 88 26 03 00                           mov min, ah
+[1715]        :                                       
+[1716]    15B2: 33 C0 A0 02 00 B3 0A F6 F3 88 26 05   setSecPlaces
+                00 A2 06 00                         
+[1717]    15C2: 33 C0 A0 03 00 B3 0A F6 F3 88 26 07   setMinPlaces
+                00 A2 08 00                         
+[1718]        :                                       
+[1719]    15D2: E8 7B F0                              call displayTimer
+[1720]        :                                       setClockTime ENDP
+[1721]        :                                       
+[1722]        :                                       displayWelcomePrompt MACRO
+[1723]        :                                       print         welcomePrompt01
+[1724]        :                                       print         welcomePrompt02
+[1725]        :                                       print         welcomePrompt03
+[1726]        :                                       
+[1727]        :                                       print         selectServicePromptStart
+[1728]        :                                       print         selectServicePrompt01
+[1729]        :                                       print         selectServicePrompt02
+[1730]        :                                       print         selectServicePrompt03
+[1731]        :                                       print         selectServicePrompt04
+[1732]        :                                       print         selectServicePrompt05
+[1733]        :                                       print         selectServicePromptEnd
+[1734]        :                                       print         selectServicePromptFinal
+[1735]        :                                       ENDM
+[1736]        :                                       
+[1737]        :                                       displayTimerPrompt MACRO
+[1738]        :                                       clearDisplay
+[1739]        :                                       print timerPromptStart
+[1740]        :                                       print timerPromptTimer
+[1741]        :                                       print timerPromptEnd
+[1742]        :                                       print timerPromptSet
+[1743]        :                                       ENDM
+[1744]        :                                       
+[1745]        :                                       displayStopwatchPrompt MACRO
+[1746]        :                                       clearDisplay
+[1747]        :                                       print stopwatchPrompt
+[1748]        :                                       ENDM
+[1749]        :                                       
+[1750]        :                                       displayClockPrompt MACRO
+[1751]        :                                       clearDisplay
+[1752]        :                                       print clockPrompt
+[1753]        :                                       ENDM
+[1754]        :                                       
+[1755]        :                                       takeServiceInput MACRO
+[1756]        :                                       mov ah,1
+[1757]        :                                       int 21h
+[1758]        :                                       sub al, 48
+[1759]        :                                       mov service,al
+[1760]        :                                       ENDM
+[1761]        :                                       
+[1762]        :                                       takeTimerInput MACRO
+[1763]        :                                       mov ah,1
+[1764]        :                                       int 21h
+[1765]        :                                       sub al, 48
+[1766]        :                                       mov bl, al
+[1767]        :                                       
+[1768]        :                                       xor bh,bh
+[1769]        :                                       
+[1770]        :                                       mov ax,bx
+[1771]        :                                       
+[1772]        :                                       mul sec_multiplier
+[1773]        :                                       mov total_sec,ax
+[1774]        :                                       ENDM
+[1775]        :                                       
+[1776]        :                                       initStopWatch MACRO
+[1777]        :                                       mov total_sec,0
+[1778]        :                                       ENDM
+[1779]        :                                       
+[1780]    15D5:                                       main proc
+[1781]    15D5: B8 10 00                              mov ax, @data
+[1782]    15D8: 8E D8                                 mov ds, ax
+[1783]        :                                       
+[1784]    15DA: B4 09 BA 0A 00 CD 21 B4 09 BA 41 00   displayWelcomePrompt
+                CD 21 B4 09 BA 78 00 CD 21 B4 09 BA 
+                AF 00 CD 21 B4 09 BA FB 00 CD 21 B4 
+                09 BA 47 01 CD 21 B4 09 BA 93 01 CD 
+                21 B4 09 BA DF 01 CD 21 B4 09 BA 2B 
+                02 CD 21 B4 09 BA 77 02 CD 21 B4 09 
+                BA C3 02 CD 21                      
+[1785]    1627: B4 01 CD 21 2C 30 A2 09 00            takeServiceInput
+[1786]        :                                       
+[1787]    1630: 8A 16 09 00                           mov dl,service
+[1788]    1634: 80 FA 02                              cmp dl,2
+[1789]    1637: 74 3D                                 je serviceStopWatch
+[1790]    1639: 7C 02                                 jl serviceTimer
+[1791]    163B: 7F 50                                 jg serviceClock
+[1792]        :                                       
+[1793]    163D:                                       serviceTimer:
+[1794]    163D: B8 03 00 CD 10 B4 09 BA CF 02 CD 21   displayTimerPrompt
+                B4 09 BA 06 03 CD 21 B4 09 BA 3D 03 
+                CD 21 B4 09 BA 74 03 CD 21          
+[1795]    165E: B4 01 CD 21 2C 30 8A D8 32 FF 8B C3   takeTimerInput
+                F6 26 04 00 A3 00 00                
+[1796]    1671: E8 91 FE                              call startTimer
+[1797]    1674: EB 28                                 jmp exit:
+[1798]        :                                       
+[1799]    1676:                                       serviceStopWatch:
+[1800]    1676: B8 03 00 CD 10 B4 09 BA 8C 03 CD 21   displayStopwatchPrompt
+                                                    
+[1801]    1682: C7 06 00 00 00 00                     initStopWatch
+[1802]    1688: E8 C8 FE                              call startStopwatch
+[1803]    168B: EB 11                                 jmp exit:
+[1804]        :                                       
+[1805]    168D:                                       serviceClock:
+[1806]    168D: B8 03 00 CD 10 B4 09 BA 9A 03 CD 21   displayClockPrompt
+                                                    
+[1807]    1699: E8 FB FE                              call setClockTime
+[1808]    169C: EB 00                                 jmp exit:
+[1809]        :                                       
+[1810]    169E:                                       exit:
+[1811]    169E: B4 4C                                 mov      ah, 4ch
+[1812]    16A0: CD 21                                 int      21h
+[1813]        :                                       main endp
+[1814]        :                                       
+[1815]        :                                       end main
+[1816]        :                                       
+[1817]        :                                       
+[1818]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: A2      -   bytes on last page (l.byte)
+0003: 00      -   bytes on last page (h.byte)
+0004: 0D      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 01      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 00      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: 00      -   SP - stack pointer (l.byte)
+0011: 01      -   SP - stack pointer (h.byte)
+0012: 4E      -   check sum (l.byte)
+0013: 56      -   check sum (h.byte)
+0014: 85      -   IP - instruction pointer (l.byte)
+0015: 0F      -   IP - instruction pointer (h.byte)
+0016: 65      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E: 86      -   relocation table - offset inside segment (l.byte)
+001F: 0F      -   relocation table - offset inside segment (h.byte)
+0020: 65      -   relocation table - segment anchor (l.byte)
+0021: 00      -   relocation table - segment anchor (h.byte)
+0022 to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================
