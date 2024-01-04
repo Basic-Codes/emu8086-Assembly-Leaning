@@ -109,6 +109,12 @@ print MACRO params
     int 21h
 ENDM
 
+beep MACRO
+    mov ah,2
+    mov dl,7
+    int 21h
+ENDM
+
 clearDisplay MACRO
      mov ax, 3
      int 10h
@@ -123,9 +129,9 @@ newLine MACRO
 ENDM
 
 waitFor1Sec MACRO params
-; Delay 1 sec | 16960 | 4240H
         MOV CX, 0FH
-        MOV DX, 4240H
+        ; MOV DX, 4240H ; Delay 1 sec | 16960 | 4240H
+        MOV DX, 1090H ; Delay 1 sec | 4340 | 1090H
         MOV AH, 86H
         INT 15H
 ENDM
@@ -1634,7 +1640,7 @@ serviceDecider PROC
     jg serviceClockClose
 
     serviceTimerLoop:
-        call loopStartTimer
+        call loopTimer
         jmp exit:
 
     serviceStopWatchLoop:
@@ -1646,14 +1652,26 @@ serviceDecider PROC
         jmp exit:
 serviceDecider ENDP
 
-loopStartTimer PROC
+loopTimer PROC
+    cmp total_sec,0
+    jle timesUp
+
      waitFor1Sec
      sub total_sec, 1
      separate
      setSecPlaces
      setMinPlaces
      call displayTimer
-loopStartTimer ENDP
+
+    timesUp:
+        beep
+        beep
+        beep
+        beep
+        beep
+        beep
+        jmp exit:
+loopTimer ENDP
 
 startTimer PROC
      mov cx,total_sec
