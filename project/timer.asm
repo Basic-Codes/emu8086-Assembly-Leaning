@@ -72,6 +72,12 @@
      _9_3 db 10,13,' ##### $'
      _9_4 db 10,13,'     # $'
      _9_5 db 10,13,' ##### $'
+
+     _x_1 db 10,13,'   $'
+     _x_2 db 10,13,' # $'
+     _x_3 db 10,13,'   $'
+     _x_4 db 10,13,' # $'
+     _x_5 db 10,13,'   $'
 .code
 
 print MACRO params
@@ -234,43 +240,33 @@ displayTimer PROC
 
      .jump_render_sec_1_place_0_1:  
           print _0_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_1_1:  
           print _1_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_2_1:  
           print _2_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_3_1:  
           print _3_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_4_1:  
           print _4_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_5_1:  
           print _5_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_6_1:  
           print _6_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_7_1:  
           print _7_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_8_1:  
           print _8_1
-          call loopStartTimer
           jmp exit:
      .jump_render_sec_1_place_9_1:  
           print _9_1
-          call loopStartTimer
           jmp exit:
      
 displayTimer ENDP
