@@ -729,47 +729,325 @@ displayLevel_02 PROC
 
         .jump_render_sec_1_place_0_2:
             print _0_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_1_2:
             print _1_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_2_2:
             print _2_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_3_2:
             print _3_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_4_2:
             print _4_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_5_2:
             print _5_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_6_2:
             print _6_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_7_2:
             print _7_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_8_2:
             print _8_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
         .jump_render_sec_1_place_9_2:
             print _9_2
-            call loopStartTimer
+            call displayLevel_03
             jmp exit:
 ; ------------<end>-------------
 
 displayLevel_02 ENDP
+
+
+; ======================
+;      Level_03
+; ======================
+displayLevel_03 PROC
+     newLine
+
+     show_min_10_place_3:
+        mov dl,min_10_place
+
+        cmp dl,0
+        je .jump_render_min_10_place_0_3
+        cmp dl,1
+        je .jump_render_min_10_place_1_3
+        cmp dl,2
+        je .jump_render_min_10_place_2_3
+        cmp dl,3
+        je .jump_render_min_10_place_3_3
+        cmp dl,4
+        je .jump_render_min_10_place_4_3
+        cmp dl,5
+        je .jump_render_min_10_place_5_3
+        cmp dl,6
+        je .jump_render_min_10_place_6_3
+        cmp dl,7
+        je .jump_render_min_10_place_7_3
+        cmp dl,8
+        je .jump_render_min_10_place_8_3
+        cmp dl,9
+        je .jump_render_min_10_place_9_3
+
+        .jump_render_min_10_place_0_3:
+            print _0_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_1_3:
+            print _1_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_2_3:
+            print _2_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_3_3:
+            print _3_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_4_3:
+            print _4_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_5_3:
+            print _5_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_6_3:
+            print _6_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_7_3:
+            print _7_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_8_3:
+            print _8_3
+            jmp show_min_1_place_3
+            jmp exit:
+        .jump_render_min_10_place_9_3:
+            print _9_3
+            jmp show_min_1_place_3
+            jmp exit:
+; ------------<end>-------------
+
+    show_min_1_place_3:
+        mov dl,min_1_place
+
+        cmp dl,0
+        je .jump_render_min_1_place_0_3
+        cmp dl,1
+        je .jump_render_min_1_place_1_3
+        cmp dl,2
+        je .jump_render_min_1_place_2_3
+        cmp dl,3
+        je .jump_render_min_1_place_3_3
+        cmp dl,4
+        je .jump_render_min_1_place_4_3
+        cmp dl,5
+        je .jump_render_min_1_place_5_3
+        cmp dl,6
+        je .jump_render_min_1_place_6_3
+        cmp dl,7
+        je .jump_render_min_1_place_7_3
+        cmp dl,8
+        je .jump_render_min_1_place_8_3
+        cmp dl,9
+        je .jump_render_min_1_place_9_3
+
+        .jump_render_min_1_place_0_3:
+            print _0_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_1_3:
+            print _1_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_2_3:
+            print _2_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_3_3:
+            print _3_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_4_3:
+            print _4_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_5_3:
+            print _5_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_6_3:
+            print _6_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_7_3:
+            print _7_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_8_3:
+            print _8_3
+            jmp show_colon_3
+            jmp exit:
+        .jump_render_min_1_place_9_3:
+            print _9_3
+            jmp show_colon_3
+            jmp exit:
+; ------------<end>-------------
+
+    show_colon_3:
+        print _x_3
+        jmp show_sec_10_place_3
+; ------------<end>-------------
+
+    show_sec_10_place_3:
+        mov dl,sec_10_place
+
+        cmp dl,0
+        je .jump_render_sec_10_place_0_3
+        cmp dl,1
+        je .jump_render_sec_10_place_1_3
+        cmp dl,2
+        je .jump_render_sec_10_place_2_3
+        cmp dl,3
+        je .jump_render_sec_10_place_3_3
+        cmp dl,4
+        je .jump_render_sec_10_place_4_3
+        cmp dl,5
+        je .jump_render_sec_10_place_5_3
+        cmp dl,6
+        je .jump_render_sec_10_place_6_3
+        cmp dl,7
+        je .jump_render_sec_10_place_7_3
+        cmp dl,8
+        je .jump_render_sec_10_place_8_3
+        cmp dl,9
+        je .jump_render_sec_10_place_9_3
+
+        .jump_render_sec_10_place_0_3:
+            print _0_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_1_3:
+            print _1_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_2_3:
+            print _2_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_3_3:
+            print _3_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_4_3:
+            print _4_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_5_3:
+            print _5_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_6_3:
+            print _6_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_7_3:
+            print _7_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_8_3:
+            print _8_3
+            jmp show_sec_1_place_3
+            jmp exit:
+        .jump_render_sec_10_place_9_3:
+            print _9_3
+            jmp show_sec_1_place_3
+            jmp exit:
+; ------------<end>-------------
+
+    show_sec_1_place_3:
+        mov dl,sec_1_place
+
+        cmp dl,0
+        je .jump_render_sec_1_place_0_3
+        cmp dl,1
+        je .jump_render_sec_1_place_1_3
+        cmp dl,2
+        je .jump_render_sec_1_place_2_3
+        cmp dl,3
+        je .jump_render_sec_1_place_3_3
+        cmp dl,4
+        je .jump_render_sec_1_place_4_3
+        cmp dl,5
+        je .jump_render_sec_1_place_5_3
+        cmp dl,6
+        je .jump_render_sec_1_place_6_3
+        cmp dl,7
+        je .jump_render_sec_1_place_7_3
+        cmp dl,8
+        je .jump_render_sec_1_place_8_3
+        cmp dl,9
+        je .jump_render_sec_1_place_9_3
+
+        .jump_render_sec_1_place_0_3:
+            print _0_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_1_3:
+            print _1_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_2_3:
+            print _2_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_3_3:
+            print _3_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_4_3:
+            print _4_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_5_3:
+            print _5_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_6_3:
+            print _6_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_7_3:
+            print _7_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_8_3:
+            print _8_3
+            call loopStartTimer
+            jmp exit:
+        .jump_render_sec_1_place_9_3:
+            print _9_3
+            call loopStartTimer
+            jmp exit:
+; ------------<end>-------------
+
+displayLevel_03 ENDP
 
 
 loopStartTimer PROC
