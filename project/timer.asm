@@ -1644,11 +1644,11 @@ serviceDecider PROC
         jmp exit:
 
     serviceStopWatchLoop:
-        
+        call startStopwatch
         jmp exit:
         
     serviceClockClose:
-        
+        ; ! just exit
         jmp exit:
 serviceDecider ENDP
 
@@ -1673,6 +1673,7 @@ loopTimer PROC
         jmp exit:
 loopTimer ENDP
 
+; TODO:: Don't need this proc | Delete it
 startTimer PROC
      mov cx,total_sec
      loopx:
@@ -1686,6 +1687,17 @@ startTimer PROC
           call displayTimer
           loop loopx
 startTimer ENDP
+
+startStopwatch PROC
+     waitFor1Sec
+     add total_sec, 1
+     separate
+     setSecPlaces
+     setMinPlaces
+     call displayTimer
+startStopwatch ENDP
+
+
 
 setClockTime PROC
     xor ax,ax
@@ -1761,6 +1773,10 @@ takeTimerInput MACRO
     mov total_sec,ax
 ENDM
 
+initStopWatch MACRO
+    mov total_sec,0
+ENDM
+
 main proc
                mov ax, @data
                mov ds, ax
@@ -1782,6 +1798,8 @@ main proc
 
                 serviceStopWatch:
                     displayStopwatchPrompt
+                    initStopWatch
+                    call startStopwatch
                     jmp exit:
                     
                 serviceClock:
